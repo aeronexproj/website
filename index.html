@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEERONEX — Project & Technology Services</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: #FFFAF0; color: #2B2B2B; overflow-x: hidden; }
+        .logo-font { font-family: 'Orbitron', sans-serif; }
+        .gradient-text { background: linear-gradient(90deg, #6B6EE8, #2AA198); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        #logo-splash { position: fixed; inset: 0; background: #FFFAF0; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .logo-container { text-align: center; animation: fadeIn 1.5s ease; }
+        .logo-icon { width: 96px; height: 96px; margin: auto; cursor: pointer; transition: transform 0.4s ease; }
+        .icon-path { fill: none; stroke: url(#logoGradient); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+        .logo-text { font-size: 3.5rem; letter-spacing: 4px; margin-top: 12px; text-shadow: 0 0 20px rgba(99,102,241,0.25); }
+        .enter-text { margin-top: 16px; font-size: 0.95rem; opacity: 0.7; animation: pulse 2s infinite; }
+        .animate-up { animation: moveUp 0.8s forwards ease; }
+
+        #main-content { display: none; }
+
+        .card { background: #FDFBF7; border: 1px solid #E6DED3; transition: transform 0.3s, box-shadow 0.3s; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        
+        .custom-idea-card { 
+            background: linear-gradient(135deg, #6B6EE8 0%, #2AA198 100%);
+            color: white; border: none; flex: 0 0 280px; min-width: 280px;
+        }
+
+        .store-card { flex: 0 0 260px; min-width: 260px; }
+        
+        .snap-x { 
+            display: flex; 
+            overflow-x: auto;
+            gap: 1.5rem; 
+            padding: 10px 0 30px 0;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            cursor: grab;
+        }
+        .snap-x:active { cursor: grabbing; }
+        .snap-x::-webkit-scrollbar { display: none; }
+
+        .btn-primary { background: linear-gradient(90deg, #6B6EE8, #2AA198); transition: transform 0.2s, box-shadow 0.2s; color: white; border: none; }
+        
+        #product-modal, #confirm-modal { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
+            z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center; 
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes moveUp { to { transform: translateY(-150px); opacity: 0; } }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function(){ emailjs.init("uRSlSJ2ZRSHq1aRI5"); })();
+    </script>
+</head>
+
+<body class="antialiased">
+
+<div id="logo-splash">
+    <div class="logo-container">
+        <svg class="logo-icon" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#6B6EE8"/><stop offset="100%" stop-color="#2AA198"/>
+                </linearGradient>
+            </defs>
+            <path class="icon-path" d="M50 10 L90 90 L65 90 L50 60 L35 90 L10 90 Z"/>
+        </svg>
+        <div class="logo-text gradient-text logo-font uppercase">AEERONEX</div>
+        <p class="enter-text text-teal-400 font-bold italic">TAP TO ENTER</p>
+    </div>
+</div>
+
+<div id="main-content">
+    <header class="sticky top-0 z-50 bg-[#FFFAF0]/90 backdrop-blur-md border-b border-[#E6DED3]">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <div class="logo-font text-2xl gradient-text font-bold">AEERONEX</div>
+            <nav class="hidden md:flex space-x-8 font-medium">
+                <a href="#about" class="hover:text-teal-500">About</a>
+                <a href="#shop" class="hover:text-teal-500">Store</a>
+                <a href="#contact" class="hover:text-teal-500">Inquiry</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="about" class="py-24 text-center px-6">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">Building <span class="gradient-text">Practical Technology</span> Projects</h1>
+        <p class="max-w-3xl mx-auto text-xl text-gray-600 mb-10">Premium hardware, source code, and mentorship for all technology domains.</p>
+        <a href="#shop" class="btn-primary px-10 py-4 rounded-lg text-lg font-semibold inline-block shadow-lg">Browse Projects</a>
+    </section>
+
+    <section id="shop" class="py-10">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Project Marketplace</h2>
+                <div class="max-w-md mx-auto mt-6 relative">
+                    <input type="text" id="projectSearch" onkeyup="filterProjects()" placeholder="Search 100+ projects..." class="w-full p-4 pl-12 rounded-2xl border border-gray-200 outline-none focus:border-teal-400 bg-white shadow-sm">
+                    <i class="fas fa-search absolute left-4 top-5 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-xl font-bold mb-4 text-indigo-600"><i class="fas fa-robot mr-3"></i> Robotics Projects</h3>
+                <div class="snap-x" id="robotics-list">
+                    <div class="card custom-idea-card p-6 rounded-2xl cursor-pointer flex flex-col justify-center items-center text-center" onclick="discussIdea('Robotics')">
+                        <i class="fas fa-brain text-4xl mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Custom Robotics Idea?</h4>
+                        <p class="text-xs opacity-90">Discuss your unique vision.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="text-xl font-bold mb-4 text-teal-600"><i class="fas fa-network-wired mr-3"></i> IIoT & Automation</h3>
+                <div class="snap-x" id="iiot-list">
+                    <div class="card custom-idea-card p-6 rounded-2xl cursor-pointer flex flex-col justify-center items-center text-center" onclick="discussIdea('IIoT')">
+                        <i class="fas fa-lightbulb text-4xl mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Custom IIoT Solution?</h4>
+                        <p class="text-xs opacity-90">Share your requirements.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="text-xl font-bold mb-4 text-orange-600"><i class="fas fa-microchip mr-3"></i> Arduino Embedded</h3>
+                <div class="snap-x" id="arduino-list">
+                    <div class="card custom-idea-card p-6 rounded-2xl cursor-pointer flex flex-col justify-center items-center text-center" onclick="discussIdea('Arduino')">
+                        <i class="fas fa-cog text-4xl mb-4"></i>
+                        <h4 class="font-bold text-lg mb-2">Custom Arduino Idea?</h4>
+                        <p class="text-xs opacity-90">Let's build your vision.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-xl font-bold mb-4 text-red-600"><i class="fas fa-bolt mr-3"></i> Electronic Components</h3>
+                <div class="snap-x" id="components-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-white border-t">
+        <div class="container mx-auto px-6 max-w-2xl text-center">
+            <h2 class="text-3xl font-bold mb-8">Order Submission</h2>
+            <form id="contact-form" class="space-y-4 text-left">
+                <input type="text" id="name" placeholder="Full Name" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
+                <input type="email" id="email" placeholder="Email Address" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
+                <input type="tel" id="phone" placeholder="WhatsApp Number" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
+                <textarea id="message" rows="4" placeholder="Mention your requirements..." required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500"></textarea>
+                <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold text-lg shadow-lg">Send Details</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-gray-400">© 2024 AEERONEX</footer>
+</div>
+
+<div id="product-modal">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 mx-4 relative shadow-2xl">
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-gray-300 hover:text-black">&times;</button>
+        <h2 id="modal-title" class="text-2xl font-bold mb-1"></h2>
+        <p id="modal-price" class="text-2xl text-teal-600 font-bold mb-4"></p>
+        <p class="text-gray-500 mb-8 text-sm">Hardware, Code, Circuit Diagram, and Mentorship included.</p>
+        <div class="space-y-3">
+            <button onclick="orderNow()" class="btn-primary w-full py-4 rounded-2xl font-bold">Confirm Order</button>
+            <button onclick="closeModal()" class="w-full border-2 border-teal-500 text-teal-500 py-4 rounded-2xl font-bold">Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirm-modal">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
+        <i class="fas fa-check-circle text-6xl text-teal-500 mb-4"></i>
+        <h2 class="text-2xl font-bold mb-2">Order Initiated!</h2>
+        <p class="text-gray-600 mb-6">Further details will be sent to your <b>WhatsApp/Email</b> shortly.</p>
+        <button onclick="closeConfirm()" class="btn-primary w-full py-3 rounded-xl font-bold">Okay</button>
+    </div>
+</div>
+
+<script>
+    const robotics = [["Advanced ESP32 Surveillance Rover", 8500], ["Human Following Robot", 5500], ["Autonomous Obstacle Avoiding Smart Car", 5800], ["Quadcopter Drone (Advanced)", 18000], ["Self-Driven Smart Vehicle", 11000], ["Arduino RC Plane", 25000], ["Smart Collision-Avoidance Vehicle", 7500], ["Lane Detection Smart Vehicle", 15000], ["Automatic Delivery Rover", 17000], ["Smart Terrain-Adaptive Rover", 5500], ["Voice-Controlled Smart Car", 7000], ["Line Following Garbage Collector", 11000], ["Smart Fire Rescue Rover", 7500], ["Blind Spot Detection Car", 3100], ["Robo Pet Dog", 20000], ["Robotic Arm", 4500], ["Path Following Robot", 2700], ["Object Avoidance Robot", 2800], ["Mobile Controlled WiFi RC Car", 3500], ["Nano Drone", 4800], ["ESP32 CAM Bluetooth Car", 3000], ["Gesture Controlled Robot", 5500], ["Self-Balancing Robot", 2900], ["Light Following Robot", 2900], ["Construction Site Monitoring Drone", 30000], ["Land Survey & Mapping Drone", 27000], ["Mini Quadcopter Drone (ESP32)", 3900]];
+    const iiot = [["Industrial Conveyor Sorting System", 11000], ["Advanced RFID + Cloud Attendance", 4800], ["IoT Smart Agriculture System", 8000], ["Sanitary Pad Decomposer", 6000], ["Anti-Theft Smart Vehicle System", 16000], ["Weather Monitoring System", 2000], ["GPS Tracking System", 2200], ["Smart Home Automation", 2300], ["Smart Dustbin", 1850], ["Smart Parking with Gate Control", 2000], ["IoT Attendance System (ESP8266)", 3500], ["Automatic Plant Watering System", 1900], ["IoT Water Quality Monitoring", 2800], ["Touchless Hand Sanitizer", 1800], ["Smart Blind Stick", 1500], ["Smart Toll Gate System", 2300], ["Smart Waste Level Monitoring", 2300], ["GSM Based Fire Alert System", 3800], ["Rain-Sensing Smart Window", 2900], ["Automatic Door Opening (PIR)", 2700], ["Parking Slot Availability Indicator", 2700], ["Smart Alarm Clock with Display", 2700], ["Medicine Reminder System", 2600]];
+    const arduino = [["Arduino Smart Door Lock", 2500], ["Heartbeat Monitoring System", 1900], ["Obstacle Radar Scanner", 2000], ["Intelligent Braking System", 2800], ["Gas Leakage Detection & Alert", 1900], ["Tilt-Based LED Flow System", 1600], ["Automatic Touchless Water Dispenser", 2200], ["Arduino Speed Detector System", 1600], ["Digital Distance Measurement", 1100], ["Memory Game System", 1500], ["RPM Measurer / Speedometer", 2400], ["LED Matrix Tower Display", 2100], ["Smart Water Level Indicator", 1400], ["Automatic Crossing Gate System", 1700], ["Smart Height Measurement", 1800]];
+    const comps = [["Arduino Uno R3", 590], ["ESP32 Dev Board", 640], ["HC-SR04 Sensor", 115], ["SG90 Servo", 155], ["L298N Motor Driver", 235], ["MQ-2 Gas Sensor", 185], ["PIR Sensor", 165]];
+
+    function createCards(list, containerId, isComp = false) {
+        const container = document.getElementById(containerId);
+        const fullList = [...list, ...list];
+        fullList.forEach(p => {
+            const div = document.createElement('div');
+            div.className = "card store-card p-5 rounded-2xl cursor-pointer project-item";
+            div.setAttribute('data-name', p[0].toLowerCase());
+            div.onclick = () => openProduct(p[0], p[1]);
+            div.innerHTML = `<div class="w-full h-24 bg-gray-100 rounded-xl mb-3 flex items-center justify-center text-gray-300"><i class="fas ${isComp ? 'fa-bolt' : 'fa-microchip'} fa-lg"></i></div><h4 class="font-bold text-xs h-8 mb-2 whitespace-normal">${p[0]}</h4><span class="text-teal-600 font-bold text-sm">₹${p[1]}</span>`;
+            container.appendChild(div);
+        });
+        startAutoScroll(container);
+    }
+
+    function startAutoScroll(container) {
+        let isPaused = false;
+        let resumeTimer;
+        const pause = () => { isPaused = true; clearTimeout(resumeTimer); };
+        const resume = () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { isPaused = false; }, 1000); };
+        
+        container.addEventListener('mouseenter', pause);
+        container.addEventListener('mouseleave', resume);
+        container.addEventListener('touchstart', pause);
+        container.addEventListener('touchend', resume);
+        container.addEventListener('mousedown', pause);
+        window.addEventListener('mouseup', resume);
+        container.addEventListener('wheel', () => { pause(); resume(); }, { passive: true });
+
+        function animate() {
+            if (!isPaused) {
+                container.scrollLeft += 0.8;
+                if (container.scrollLeft >= (container.scrollWidth / 2)) container.scrollLeft = 0;
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    function filterProjects() {
+        const input = document.getElementById('projectSearch').value.toLowerCase();
+        document.querySelectorAll('.project-item').forEach(card => card.style.display = card.getAttribute('data-name').includes(input) ? "block" : "none");
+    }
+
+    createCards(robotics, 'robotics-list');
+    createCards(iiot, 'iiot-list');
+    createCards(arduino, 'arduino-list');
+    createCards(comps, 'components-list', true);
+
+    let currentItem = {};
+    function openProduct(name, price) {
+        currentItem = { name, price };
+        document.getElementById('modal-title').innerText = name;
+        document.getElementById('modal-price').innerText = "₹" + price;
+        document.getElementById('product-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() { document.getElementById('product-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+    function orderNow() { closeModal(); document.getElementById('confirm-modal').style.display = 'flex'; window.location.hash = "contact"; document.getElementById('message').value = `ORDER REQUEST: ${currentItem.name} (₹${currentItem.price}).`; document.getElementById('message').focus(); }
+    function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; }
+    function discussIdea(type) { window.location.hash = "contact"; document.getElementById('message').value = `Hi AEERONEX, I have a custom idea for a ${type} project: `; document.getElementById('message').focus(); }
+
+    document.querySelector('.logo-icon').addEventListener('click', () => {
+        document.querySelector('.logo-icon').classList.add('animate-up');
+        document.querySelector('.logo-text').classList.add('animate-up');
+        document.querySelector('.enter-text').classList.add('animate-up');
+        setTimeout(() => { document.getElementById('logo-splash').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; document.body.style.overflow = 'auto'; }, 800);
+    });
+
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        emailjs.send("service_cs9akh6", "template_es7nsoo", {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            message: document.getElementById("message").value
+        }).then(() => { document.getElementById('confirm-modal').style.display = 'flex'; this.reset(); });
+    });
+</script>
+</body>
+</html>
