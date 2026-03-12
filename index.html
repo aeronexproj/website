@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,20 +35,26 @@
         .store-card { flex: 0 0 260px; min-width: 260px; }
         
         .snap-x { 
-            display: flex; 
-            overflow-x: auto;
-            gap: 1.5rem; 
-            padding: 10px 0 30px 0;
-            white-space: nowrap;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            cursor: grab;
+            display: flex; overflow-x: auto; gap: 1.5rem; padding: 10px 0 30px 0;
+            white-space: nowrap; scrollbar-width: none; -ms-overflow-style: none; 
+            cursor: grab; scroll-snap-type: x proximity;
         }
         .snap-x:active { cursor: grabbing; }
         .snap-x::-webkit-scrollbar { display: none; }
 
-        .btn-primary { background: linear-gradient(90deg, #6B6EE8, #2AA198); transition: transform 0.2s, box-shadow 0.2s; color: white; border: none; }
+        .btn-primary { background: linear-gradient(90deg, #6B6EE8, #2AA198); transition: all 0.2s; color: white; border: none; }
         
+        #cart-pill {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #008000; color: white; width: 90%; max-width: 350px;
+            height: 60px; border-radius: 50px; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 20px; z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        #cart-pill.visible { transform: translateX(-50%) translateY(0); }
+        .pill-icon-circle { background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
+
         #product-modal, #confirm-modal { 
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
             z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center; 
@@ -83,6 +88,19 @@
     </div>
 </div>
 
+<div id="cart-pill" onclick="checkoutCart()">
+    <div class="flex items-center">
+        <div class="pill-icon-circle text-green-700">
+            <i class="fas fa-shopping-basket"></i>
+        </div>
+        <div>
+            <div class="text-sm font-bold leading-none">View cart</div>
+            <div id="cart-pill-count" class="text-xs uppercase opacity-80 mt-1">0 ITEMS</div>
+        </div>
+    </div>
+    <i class="fas fa-chevron-right"></i>
+</div>
+
 <div id="main-content">
     <header class="sticky top-0 z-50 bg-[#FFFAF0]/90 backdrop-blur-md border-b border-[#E6DED3]">
         <div class="container mx-auto flex justify-between items-center py-4 px-6">
@@ -90,7 +108,7 @@
             <nav class="hidden md:flex space-x-8 font-medium">
                 <a href="#about" class="hover:text-teal-500">About</a>
                 <a href="#shop" class="hover:text-teal-500">Store</a>
-                <a href="#contact" class="hover:text-teal-500">Inquiry</a>
+                <a href="#contact-section" class="hover:text-teal-500">Contact</a>
             </nav>
         </div>
     </header>
@@ -98,7 +116,7 @@
     <section id="about" class="py-24 text-center px-6">
         <h1 class="text-4xl md:text-6xl font-bold mb-6">Building <span class="gradient-text">Practical Technology</span> Projects</h1>
         <p class="max-w-3xl mx-auto text-xl text-gray-600 mb-10">Premium hardware, source code, and mentorship for all technology domains.</p>
-        <a href="#shop" class="btn-primary px-10 py-4 rounded-lg text-lg font-semibold inline-block shadow-lg">Browse Projects</a>
+        <a href="#shop" class="btn-primary px-10 py-4 rounded-lg text-lg font-semibold inline-block shadow-lg uppercase tracking-widest">Browse Projects</a>
     </section>
 
     <section id="shop" class="py-10">
@@ -143,7 +161,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="mb-12">
                 <h3 class="text-xl font-bold mb-4 text-red-600"><i class="fas fa-bolt mr-3"></i> Electronic Components</h3>
                 <div class="snap-x" id="components-list"></div>
@@ -151,20 +169,61 @@
         </div>
     </section>
 
-    <section id="contact" class="py-24 bg-white border-t">
+    <section id="contact-section" class="py-24 bg-white border-t">
         <div class="container mx-auto px-6 max-w-2xl text-center">
-            <h2 class="text-3xl font-bold mb-8">Order Submission</h2>
+            <h2 class="text-3xl font-bold mb-8">Direct Inquiry</h2>
             <form id="contact-form" class="space-y-4 text-left">
                 <input type="text" id="name" placeholder="Full Name" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
                 <input type="email" id="email" placeholder="Email Address" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
                 <input type="tel" id="phone" placeholder="WhatsApp Number" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
                 <textarea id="message" rows="4" placeholder="Mention your requirements..." required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500"></textarea>
-                <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold text-lg shadow-lg">Send Details</button>
+                <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold text-lg shadow-lg uppercase tracking-widest">Submit Inquiry</button>
             </form>
         </div>
     </section>
 
-    <footer class="py-10 text-center text-gray-400">© 2024 AEERONEX</footer>
+    <footer class="bg-[#FDFBF7] border-t border-[#E6DED3] pt-16 pb-8">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+            <div>
+                <div class="logo-font text-2xl gradient-text font-bold mb-4">AEERONEX</div>
+                <p class="text-gray-500 text-sm leading-relaxed">Providing high-quality technology solutions, hardware projects, and professional mentorship for engineers and innovators.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Contact Us</h4>
+                <ul class="space-y-5 text-gray-600">
+                    <li class="flex items-center justify-center md:justify-start gap-3">
+                        <div class="flex gap-2 text-teal-600">
+                            <i class="fas fa-phone-alt"></i>
+                            <i class="fab fa-whatsapp text-green-600"></i>
+                        </div>
+                        <a href="tel:+917855021303" class="hover:text-teal-600">+91 78550 21303</a>
+                    </li>
+                    <li class="flex items-center justify-center md:justify-start gap-3">
+                        <div class="flex gap-2 text-teal-600">
+                            <i class="fas fa-phone-alt"></i>
+                            <i class="fab fa-whatsapp text-green-600"></i>
+                        </div>
+                        <a href="tel:+918637289753" class="hover:text-teal-600">+91 86372 89753</a>
+                    </li>
+                    <li class="flex items-center justify-center md:justify-start gap-3 pt-2 border-t border-gray-100">
+                        <i class="fas fa-envelope text-indigo-600"></i>
+                        <a href="mailto:aeronexproj@gmail.com" class="hover:text-teal-600">aeronexproj@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Navigation</h4>
+                <div class="flex flex-col space-y-3 text-gray-600">
+                    <a href="#about" class="hover:text-teal-600">Home</a>
+                    <a href="#shop" class="hover:text-teal-600">Store</a>
+                    <a href="#contact-section" class="hover:text-teal-600">Inquiry</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-16 pt-8 border-t border-gray-200 text-center text-gray-400 text-sm">
+            © 2024 AEERONEX. All Rights Reserved.
+        </div>
+    </footer>
 </div>
 
 <div id="product-modal">
@@ -172,10 +231,9 @@
         <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-gray-300 hover:text-black">&times;</button>
         <h2 id="modal-title" class="text-2xl font-bold mb-1"></h2>
         <p id="modal-price" class="text-2xl text-teal-600 font-bold mb-4"></p>
-        <p class="text-gray-500 mb-8 text-sm">Hardware, Code, Circuit Diagram, and Mentorship included.</p>
-        <div class="space-y-3">
-            <button onclick="orderNow()" class="btn-primary w-full py-4 rounded-2xl font-bold">Confirm Order</button>
-            <button onclick="closeModal()" class="w-full border-2 border-teal-500 text-teal-500 py-4 rounded-2xl font-bold">Close</button>
+        <div class="grid grid-cols-1 gap-3">
+            <button onclick="orderNow()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest">Buy Now</button>
+            <button onclick="addToCart()" class="bg-gray-100 text-gray-800 w-full py-4 rounded-2xl font-bold hover:bg-gray-200 uppercase tracking-widest">Add to Cart</button>
         </div>
     </div>
 </div>
@@ -183,67 +241,180 @@
 <div id="confirm-modal">
     <div class="bg-white rounded-3xl max-w-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
         <i class="fas fa-check-circle text-6xl text-teal-500 mb-4"></i>
-        <h2 class="text-2xl font-bold mb-2">Order Initiated!</h2>
-        <p class="text-gray-600 mb-6">Further details will be sent to your <b>WhatsApp/Email</b> shortly.</p>
-        <button onclick="closeConfirm()" class="btn-primary w-full py-3 rounded-xl font-bold">Okay</button>
+        <h2 class="text-2xl font-bold mb-2">Thank You!</h2>
+        <p class="text-gray-600 mb-6">Your order details will be <b>discussed further via WhatsApp or Email</b> shortly.</p>
+        <button onclick="closeConfirm()" class="btn-primary w-full py-3 rounded-xl font-bold uppercase">Close</button>
     </div>
 </div>
 
 <script>
-    const robotics = [["Advanced ESP32 Surveillance Rover", 8500], ["Human Following Robot", 5500], ["Autonomous Obstacle Avoiding Smart Car", 5800], ["Quadcopter Drone (Advanced)", 18000], ["Self-Driven Smart Vehicle", 11000], ["Arduino RC Plane", 25000], ["Smart Collision-Avoidance Vehicle", 7500], ["Lane Detection Smart Vehicle", 15000], ["Automatic Delivery Rover", 17000], ["Smart Terrain-Adaptive Rover", 5500], ["Voice-Controlled Smart Car", 7000], ["Line Following Garbage Collector", 11000], ["Smart Fire Rescue Rover", 7500], ["Blind Spot Detection Car", 3100], ["Robo Pet Dog", 20000], ["Robotic Arm", 4500], ["Path Following Robot", 2700], ["Object Avoidance Robot", 2800], ["Mobile Controlled WiFi RC Car", 3500], ["Nano Drone", 4800], ["ESP32 CAM Bluetooth Car", 3000], ["Gesture Controlled Robot", 5500], ["Self-Balancing Robot", 2900], ["Light Following Robot", 2900], ["Construction Site Monitoring Drone", 30000], ["Land Survey & Mapping Drone", 27000], ["Mini Quadcopter Drone (ESP32)", 3900]];
-    const iiot = [["Industrial Conveyor Sorting System", 11000], ["Advanced RFID + Cloud Attendance", 4800], ["IoT Smart Agriculture System", 8000], ["Sanitary Pad Decomposer", 6000], ["Anti-Theft Smart Vehicle System", 16000], ["Weather Monitoring System", 2000], ["GPS Tracking System", 2200], ["Smart Home Automation", 2300], ["Smart Dustbin", 1850], ["Smart Parking with Gate Control", 2000], ["IoT Attendance System (ESP8266)", 3500], ["Automatic Plant Watering System", 1900], ["IoT Water Quality Monitoring", 2800], ["Touchless Hand Sanitizer", 1800], ["Smart Blind Stick", 1500], ["Smart Toll Gate System", 2300], ["Smart Waste Level Monitoring", 2300], ["GSM Based Fire Alert System", 3800], ["Rain-Sensing Smart Window", 2900], ["Automatic Door Opening (PIR)", 2700], ["Parking Slot Availability Indicator", 2700], ["Smart Alarm Clock with Display", 2700], ["Medicine Reminder System", 2600]];
-    const arduino = [["Arduino Smart Door Lock", 2500], ["Heartbeat Monitoring System", 1900], ["Obstacle Radar Scanner", 2000], ["Intelligent Braking System", 2800], ["Gas Leakage Detection & Alert", 1900], ["Tilt-Based LED Flow System", 1600], ["Automatic Touchless Water Dispenser", 2200], ["Arduino Speed Detector System", 1600], ["Digital Distance Measurement", 1100], ["Memory Game System", 1500], ["RPM Measurer / Speedometer", 2400], ["LED Matrix Tower Display", 2100], ["Smart Water Level Indicator", 1400], ["Automatic Crossing Gate System", 1700], ["Smart Height Measurement", 1800]];
-    const comps = [["Arduino Uno R3", 590], ["ESP32 Dev Board", 640], ["HC-SR04 Sensor", 115], ["SG90 Servo", 155], ["L298N Motor Driver", 235], ["MQ-2 Gas Sensor", 185], ["PIR Sensor", 165]];
+     const roboticsProjects = [
+        { name:"Advanced ESP32 Surveillance Rover (Live Streaming + Control)", price:8500 },
+        { name:"Human Following Robot", price:5500 },
+        { name:"Autonomous Obstacle Avoiding Smart Car (Multi-Sensor)", price:5800 },
+        { name:"Quadcopter Drone (Advanced Version)", price:18000 },
+        { name:"Self-Driven Smart Vehicle", price:10000 },
+        { name:"Arduino RC Plane", price:16000 },
+        { name:"Smart Collision Avoidance Test Vehicle", price:7500 },
+        { name:"Lane Detection Smart Vehicle (Indoor Model)", price:9000 },
+        { name:"Automatic Delivery Rover (Indoor Logistics Model)", price:17000 },
+        { name:"Smart Terrain Adaptive Rover (Mars Rover)", price:5500 },
+        { name:"Voice Controlled Smart Car with Safety Logic", price:5000 },
+        { name:"Line Following Garbage Collector Vehicle", price:5000 },
+        { name:"Smart Fire Rescue Rover", price:7500 },
+        { name:"Blind Spot Detection Car", price:3100 },
+        { name:"Robotic Arm", price:4500 },
+        { name:"Path Following Robot", price:2700 },
+        { name:"Object Avoidance Robot", price:2800 },
+        { name:"Mobile Controlled WiFi RC Car", price:3500 },
+        { name:"Nano Drone", price:4800 },
+        { name:"ESP32 CAM Bluetooth Controlled Car Robot", price:3000 },
+        { name:"Gesture Controlled Robot", price:5500 },
+        { name:"Self Balancing Robot", price:2900 },
+        { name:"Light Following Robot", price:2900 },
+        { name:"Construction Site Monitoring Drone", price:30000 },
+        { name:"Land Survey and Mapping Drone", price:27000 },
+        { name:"Mini Quadcopter Drone (ESP32)", price:3900 }
+    ];
 
-    function createCards(list, containerId, isComp = false) {
+    const iiotProjects = [
+        { name:"Industrial Conveyor Sorting System (Multi Sensor)", price:11000 },
+        { name:"Advanced RFID + Cloud Attendance System", price:4000 },
+        { name:"IoT Smart Agriculture Automation System", price:8000 },
+        { name:"Sanitary Pad and Tissue Decomposer", price:6000 },
+        { name:"Weather Monitoring System", price:2000 },
+        { name:"GPS Tracking System", price:2200 },
+        { name:"Smart Home Automation", price:2300 },
+        { name:"Smart Dustbin", price:1800},
+        { name:"Smart Parking with Gate Control", price:2000 },
+        { name:"IoT Attendance System (ESP8266)", price:3500 },
+        { name:"Automatic Plant Watering System", price:1900 },
+        { name:"IoT Water Quality Monitoring System", price:2800 },
+        { name:"Touchless Hand Sanitizer Machine", price:1800 },
+        { name:"Smart Blind Stick", price:1500 },
+        { name:"Smart Toll Gate System (RFID Based)", price:2300 },
+        { name:"Smart Waste Level Monitoring System", price:2300 },
+        { name:"GSM Based Fire Alert System", price:3800 },
+        { name:"Rain Sensing Smart Window / Clothes Protector", price:2900 },
+        { name:"Automatic Door Opening System (PIR)", price:2700 },
+        { name:"Parking Slot Availability Indicator", price:2700 },
+        { name:"Smart Alarm Clock with Display", price:2700 },
+        { name:"Medicine Reminder System", price:2600 }
+    ];
+
+    const arduinoProjects = [
+        { name:"Arduino Smart Door Lock with RFID and Fire Detection", price:2500 },
+        { name:"Heartbeat Monitoring System with LED Display", price:1900 },
+        { name:"Obstacle Radar Scanner", price:2000 },
+        { name:"Intelligent Braking System", price:2800 },
+        { name:"Gas Leakage Detection and Alert System (MQ Sensor)", price:1900 },
+        { name:"Tilt Based LED Flow System", price:1600 },
+        { name:"Automatic Touchless Water Dispenser", price:2200 },
+        { name:"Arduino Speed Detector System", price:1600 },
+        { name:"Digital Distance Measurement System", price:1100 },
+        { name:"Memory Game System", price:1500 },
+        { name:"RPM Measurer / Speedometer", price:2400 },
+        { name:"LED Matrix Tower Display System", price:2100 },
+        { name:"Smart Water Level Indicator System", price:1400 },
+        { name:"Automatic Crossing Gate System", price:1700 },
+        { name:"Smart Height Measurement System", price:1800 }
+    ];
+
+ const componentsList = [
+    { name: "Arduino Uno R3", price: 650 },
+    { name: "ESP32 Dev Board", price: 450 },
+    { name: "HC-SR04 Ultrasonic Sensor", price: 80 },
+    { name: "SG90 Servo Motor", price: 120 },
+    { name: "L298N Motor Driver", price: 180 },
+    { name: "MQ-2 Gas Sensor", price: 150 },
+    { name: "PIR Motion Sensor", price: 95 },
+
+    { name: "Arduino Nano", price: 185 },
+    { name: "NodeMCU ESP8266", price: 210 },
+    { name: "DHT11 Temperature Sensor", price: 60 },
+    { name: "DS18B20 Temperature Sensor", price: 80 },
+    { name: "RFID RC522 Module", price: 75 },
+    { name: "MAX7219 Dot Matrix Display", price: 295 },
+    { name: "16x2 LCD with I2C", price: 40 },
+    { name: "0.96 OLED Display", price: 180 },
+    { name: "2.4 TFT Display", price: 540 },
+
+    { name: "IR Sensor Module", price: 30 },
+    { name: "Water Level Sensor", price: 25 },
+    { name: "MPU9250 Gyro Sensor", price: 460 },
+    { name: "HC-05 Bluetooth Module", price: 265 },
+
+    { name: "2 Channel Relay Module", price: 80 },
+    { name: "4 Channel Relay Module", price: 150 },
+
+    { name: "Submersible Water Pump", price: 50 },
+    { name: "3V DC Motor", price: 20 },
+
+    { name: "Car Chassis 2 Wheel", price: 290 },
+    { name: "Car Chassis 4 Wheel", price: 600 },
+
+    { name: "Piezo Buzzer", price: 35 },
+    { name: "LED 5mm", price: 3 },
+    { name: "LED 3mm", price: 2 },
+    { name: "1K Resistor", price: 2 },
+    { name: "Ceramic Capacitor", price: 2 },
+    { name: "1N4007 Diode", price: 2 },
+
+    { name: "DC Power Jack", price: 35 },
+    { name: "Jumper Wires", price: 2 },
+    { name: "Ribbon Cable", price: 38 }
+];
+
+    let cart = [];
+    let currentItem = {};
+
+    function createCards(list, containerId, iconClass) {
         const container = document.getElementById(containerId);
-        const fullList = [...list, ...list];
-        fullList.forEach(p => {
+        const scrollList = [...list, ...list];
+        scrollList.forEach(p => {
             const div = document.createElement('div');
             div.className = "card store-card p-5 rounded-2xl cursor-pointer project-item";
-            div.setAttribute('data-name', p[0].toLowerCase());
-            div.onclick = () => openProduct(p[0], p[1]);
-            div.innerHTML = `<div class="w-full h-24 bg-gray-100 rounded-xl mb-3 flex items-center justify-center text-gray-300"><i class="fas ${isComp ? 'fa-bolt' : 'fa-microchip'} fa-lg"></i></div><h4 class="font-bold text-xs h-8 mb-2 whitespace-normal">${p[0]}</h4><span class="text-teal-600 font-bold text-sm">₹${p[1]}</span>`;
+            div.setAttribute('data-name', p.name.toLowerCase());
+            div.onclick = () => openProduct(p.name, p.price);
+            div.innerHTML = `
+                <div class="w-full h-24 bg-gray-100 rounded-xl mb-3 flex items-center justify-center text-gray-300">
+                    <i class="fas ${iconClass} fa-lg"></i>
+                </div>
+                <h4 class="font-bold text-xs h-10 mb-2 whitespace-normal overflow-hidden text-center">${p.name}</h4>
+                <p class="text-teal-600 font-bold text-center">₹${p.price}</p>
+            `;
             container.appendChild(div);
         });
-        startAutoScroll(container);
+        setupInteractiveScroll(container);
     }
 
-    function startAutoScroll(container) {
-        let isPaused = false;
-        let resumeTimer;
-        const pause = () => { isPaused = true; clearTimeout(resumeTimer); };
-        const resume = () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { isPaused = false; }, 1000); };
-        
-        container.addEventListener('mouseenter', pause);
-        container.addEventListener('mouseleave', resume);
-        container.addEventListener('touchstart', pause);
-        container.addEventListener('touchend', resume);
-        container.addEventListener('mousedown', pause);
-        window.addEventListener('mouseup', resume);
-        container.addEventListener('wheel', () => { pause(); resume(); }, { passive: true });
-
+    function setupInteractiveScroll(container) {
+        let isPaused = false; let isDragging = false; let startX; let scrollLeft;
         function animate() {
-            if (!isPaused) {
+            if (!isPaused && !isDragging) {
                 container.scrollLeft += 0.8;
                 if (container.scrollLeft >= (container.scrollWidth / 2)) container.scrollLeft = 0;
             }
             requestAnimationFrame(animate);
         }
-        animate();
+        requestAnimationFrame(animate);
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true; startX = e.pageX - container.offsetLeft; scrollLeft = container.scrollLeft;
+        });
+        container.addEventListener('mouseleave', () => { isDragging = false; isPaused = false; });
+        container.addEventListener('mouseup', () => { isDragging = false; isPaused = false; });
+        container.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2;
+            container.scrollLeft = scrollLeft - walk;
+        });
+        container.addEventListener('mouseenter', () => isPaused = true);
+        container.addEventListener('touchstart', () => isPaused = true);
+        container.addEventListener('touchend', () => isPaused = false);
     }
 
-    function filterProjects() {
-        const input = document.getElementById('projectSearch').value.toLowerCase();
-        document.querySelectorAll('.project-item').forEach(card => card.style.display = card.getAttribute('data-name').includes(input) ? "block" : "none");
-    }
-
-    createCards(robotics, 'robotics-list');
-    createCards(iiot, 'iiot-list');
-    createCards(arduino, 'arduino-list');
-    createCards(comps, 'components-list', true);
-
-    let currentItem = {};
     function openProduct(name, price) {
         currentItem = { name, price };
         document.getElementById('modal-title').innerText = name;
@@ -253,15 +424,55 @@
     }
 
     function closeModal() { document.getElementById('product-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
-    function orderNow() { closeModal(); document.getElementById('confirm-modal').style.display = 'flex'; window.location.hash = "contact"; document.getElementById('message').value = `ORDER REQUEST: ${currentItem.name} (₹${currentItem.price}).`; document.getElementById('message').focus(); }
+
+    function addToCart() {
+        cart.push({...currentItem});
+        updateCartPill();
+        closeModal();
+    }
+
+    function updateCartPill() {
+        const pill = document.getElementById('cart-pill');
+        const countText = document.getElementById('cart-pill-count');
+        countText.innerText = `${cart.length} ${cart.length === 1 ? 'ITEM' : 'ITEMS'}`;
+        if (cart.length > 0) pill.classList.add('visible');
+        else pill.classList.remove('visible');
+    }
+
+    function checkoutCart() {
+        if(cart.length === 0) return;
+        const itemsList = cart.map(i => `${i.name} (₹${i.price})`).join(", ");
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        document.getElementById('message').value = `Hello AEERONEX, I am interested in: ${itemsList}. Total: ₹${total}. Please contact me to proceed.`;
+        window.location.hash = "contact-section";
+        document.getElementById('message').focus();
+    }
+
+    function orderNow() {
+        closeModal();
+        document.getElementById('message').value = `Hello AEERONEX, I'm interested in ${currentItem.name} (₹${currentItem.price}). Please provide more information.`;
+        window.location.hash = "contact-section";
+        document.getElementById('message').focus();
+    }
+
+    function filterProjects() {
+        const input = document.getElementById('projectSearch').value.toLowerCase();
+        document.querySelectorAll('.project-item').forEach(card => card.style.display = card.getAttribute('data-name').includes(input) ? "block" : "none");
+    }
+
+    function discussIdea(type) { 
+        window.location.hash = "contact-section"; 
+        document.getElementById('message').value = `Hi AEERONEX, I have a custom idea for a ${type} project: `; 
+        document.getElementById('message').focus(); 
+    }
+    
     function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; }
-    function discussIdea(type) { window.location.hash = "contact"; document.getElementById('message').value = `Hi AEERONEX, I have a custom idea for a ${type} project: `; document.getElementById('message').focus(); }
 
     document.querySelector('.logo-icon').addEventListener('click', () => {
         document.querySelector('.logo-icon').classList.add('animate-up');
         document.querySelector('.logo-text').classList.add('animate-up');
         document.querySelector('.enter-text').classList.add('animate-up');
-        setTimeout(() => { document.getElementById('logo-splash').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; document.body.style.overflow = 'auto'; }, 800);
+        setTimeout(() => { document.getElementById('logo-splash').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }, 800);
     });
 
     document.getElementById('contact-form').addEventListener('submit', function(e) {
@@ -271,8 +482,18 @@
             email: document.getElementById("email").value,
             phone: document.getElementById("phone").value,
             message: document.getElementById("message").value
-        }).then(() => { document.getElementById('confirm-modal').style.display = 'flex'; this.reset(); });
+        }).then(() => { 
+            document.getElementById('confirm-modal').style.display = 'flex'; 
+            this.reset(); 
+            cart = []; 
+            updateCartPill();
+        });
     });
+
+    createCards(roboticsProjects, 'robotics-list', 'fa-robot');
+    createCards(iiotProjects, 'iiot-list', 'fa-network-wired');
+    createCards(arduinoProjects, 'arduino-list', 'fa-microchip');
+    createCards(componentsList, 'components-list', 'fa-bolt');
 </script>
 </body>
 </html>
