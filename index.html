@@ -55,7 +55,7 @@
         #cart-pill.visible { transform: translateX(-50%) translateY(0); }
         .pill-icon-circle { background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
 
-        #product-modal, #confirm-modal { 
+        #product-modal, #confirm-modal, #cart-modal { 
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
             z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center; 
         }
@@ -88,7 +88,7 @@
     </div>
 </div>
 
-<div id="cart-pill" onclick="checkoutCart()">
+<div id="cart-pill" onclick="openCartModal()">
     <div class="flex items-center">
         <div class="pill-icon-circle text-green-700">
             <i class="fas fa-shopping-basket"></i>
@@ -227,13 +227,37 @@
 </div>
 
 <div id="product-modal">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 mx-4 relative shadow-2xl">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 mx-4 relative shadow-2xl">
         <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-gray-300 hover:text-black">&times;</button>
-        <h2 id="modal-title" class="text-2xl font-bold mb-1"></h2>
+        <h2 id="modal-title" class="text-2xl font-bold mb-2"></h2>
         <p id="modal-price" class="text-2xl text-teal-600 font-bold mb-4"></p>
+        
+        <div class="bg-gray-50 border-l-4 border-teal-500 p-4 mb-8 rounded-r-xl">
+            <h4 class="text-xs font-bold uppercase text-gray-400 mb-1 tracking-widest">Working Principle</h4>
+            <p id="modal-desc" class="text-gray-600 text-sm leading-relaxed"></p>
+        </div>
+
         <div class="grid grid-cols-1 gap-3">
             <button onclick="orderNow()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest">Buy Now</button>
             <button onclick="addToCart()" class="bg-gray-100 text-gray-800 w-full py-4 rounded-2xl font-bold hover:bg-gray-200 uppercase tracking-widest">Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<div id="cart-modal">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 mx-4 relative shadow-2xl">
+        <button onclick="closeCartModal()" class="absolute top-4 right-4 text-3xl text-gray-300 hover:text-black">&times;</button>
+        <h2 class="text-2xl font-bold mb-4">Review Your Selection</h2>
+        <div id="cart-items-list" class="max-h-60 overflow-y-auto mb-6 space-y-3 pr-2"></div>
+        <div class="border-t pt-4 mb-6">
+            <div class="flex justify-between items-center font-bold text-xl">
+                <span>Total:</span>
+                <span id="cart-total-display" class="text-teal-600">₹0</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 gap-3">
+            <button onclick="checkoutCart()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest">Proceed to Inquiry</button>
+            <button onclick="closeCartModal()" class="bg-gray-100 text-gray-600 w-full py-3 rounded-2xl font-bold">Continue Shopping</button>
         </div>
     </div>
 </div>
@@ -248,122 +272,88 @@
 </div>
 
 <script>
-     const roboticsProjects = [
-        { name:"Advanced ESP32 Surveillance Rover (Live Streaming + Control)", price:8500 },
-        { name:"Human Following Robot", price:5500 },
-        { name:"Autonomous Obstacle Avoiding Smart Car (Multi-Sensor)", price:5800 },
-        { name:"Quadcopter Drone (Advanced Version)", price:18000 },
-        { name:"Self-Driven Smart Vehicle", price:10000 },
-        { name:"Arduino RC Plane", price:16000 },
-        { name:"Smart Collision Avoidance Test Vehicle", price:7500 },
-        { name:"Lane Detection Smart Vehicle (Indoor Model)", price:9000 },
-        { name:"Automatic Delivery Rover (Indoor Logistics Model)", price:17000 },
-        { name:"Smart Terrain Adaptive Rover (Mars Rover)", price:5500 },
-        { name:"Voice Controlled Smart Car with Safety Logic", price:5000 },
-        { name:"Line Following Garbage Collector Vehicle", price:5000 },
-        { name:"Smart Fire Rescue Rover", price:7500 },
-        { name:"Blind Spot Detection Car", price:3100 },
-        { name:"Robotic Arm", price:4500 },
-        { name:"Path Following Robot", price:2700 },
-        { name:"Object Avoidance Robot", price:2800 },
-        { name:"Mobile Controlled WiFi RC Car", price:3500 },
-        { name:"Nano Drone", price:4800 },
-        { name:"ESP32 CAM Bluetooth Controlled Car Robot", price:3000 },
-        { name:"Gesture Controlled Robot", price:5500 },
-        { name:"Self Balancing Robot", price:2900 },
-        { name:"Light Following Robot", price:2900 },
-        { name:"Construction Site Monitoring Drone", price:30000 },
-        { name:"Land Survey and Mapping Drone", price:27000 },
-        { name:"Mini Quadcopter Drone (ESP32)", price:3900 }
+    // Note: I have added a 'desc' property to each project object
+    const roboticsProjects = [
+        { name:"Advanced ESP32 Surveillance Rover (Live Streaming + Control)", price:8500, desc: "Uses ESP32-CAM to stream real-time video over WiFi while being controlled via a mobile app." },
+        { name:"Human Following Robot", price:5500, desc: "Utilizes ultrasonic or IR sensors to detect human movement and maintain a specific distance automatically." },
+        { name:"Autonomous Obstacle Avoiding Smart Car (Multi-Sensor)", price:5800, desc: "Detects objects using sonar sensors and calculates a clear path to navigate without human intervention." },
+        { name:"Quadcopter Drone (Advanced Version)", price:18000, desc: "Controlled via RF transmitter with GPS stability and gyro-balanced flight controllers for smooth aerial mobility." },
+        { name:"Self-Driven Smart Vehicle", price:10000, desc: "Uses computer vision or pre-programmed sensors to follow lanes and avoid collisions on a mini-road circuit." },
+        { name:"Arduino RC Plane", price:16000, desc: "Lightweight aerodynamically designed plane controlled wirelessly using high-range radio frequency modules." },
+        { name:"Smart Collision Avoidance Test Vehicle", price:7500, desc: "Advanced braking system that stops the vehicle automatically when it detects an object within 30cm range." },
+        { name:"Lane Detection Smart Vehicle (Indoor Model)", price:9000, desc: "Uses light sensors to follow black/white tracks while adjusting motor speed for sharp turns." },
+        { name:"Automatic Delivery Rover (Indoor Logistics Model)", price:17000, desc: "Navigates between pre-defined coordinates using encoders to deliver small packages indoors." },
+        { name:"Smart Terrain Adaptive Rover (Mars Rover)", price:5500, desc: "Features a rocker-bogie suspension system allowing it to climb rocks and uneven surfaces without tipping." },
+        { name:"Voice Controlled Smart Car with Safety Logic", price:5000, desc: "Processes vocal commands via Bluetooth and translates them into motor movements using a voice recognition app." },
+        { name:"Line Following Garbage Collector Vehicle", price:5000, desc: "Follows a fixed path while using a robotic scoop to collect waste at specific sensor triggers." },
+        { name:"Smart Fire Rescue Rover", price:7500, desc: "Equipped with fire sensors and a water pump system that activates when high heat or flame is detected." },
+        { name:"Blind Spot Detection Car", price:3100, desc: "Uses side-mounted sensors to alert the driver with a buzzer if an object is present in non-visible angles." },
+        { name:"Robotic Arm", price:4500, desc: "Controlled via potentiometers or app, using servo motors to perform precise pick-and-place tasks." },
+        { name:"Path Following Robot", price:2700, desc: "A simple logic-based robot that follows complex geometric paths using high-accuracy IR sensor arrays." },
+        { name:"Object Avoidance Robot", price:2800, desc: "A beginner-friendly robot that turns away whenever it hits a dead-end using a rotating ultrasonic head." },
+        { name:"Mobile Controlled WiFi RC Car", price:3500, desc: "Connected via a local server on NodeMCU, allowing control from any smartphone within the WiFi range." },
+        { name:"Nano Drone", price:4800, desc: "Miniature flight system using coreless motors and a 6-axis gyro for indoor hovering and maneuvers." },
+        { name:"ESP32 CAM Bluetooth Controlled Car Robot", price:3000, desc: "Combines low-latency bluetooth control with a camera module for a point-of-view driving experience." },
+        { name:"Gesture Controlled Robot", price:5500, desc: "Uses an MPU6050 accelerometer to detect hand tilt and translate gestures into robot movement." },
+        { name:"Self Balancing Robot", price:2900, desc: "Maintains its upright position on two wheels using a PID algorithm and real-time gyro data." },
+        { name:"Light Following Robot", price:2900, desc: "Uses LDR sensors to detect the brightest light source and steers itself toward it automatically." },
+        { name:"Construction Site Monitoring Drone", price:30000, desc: "Advanced aerial system with high-res camera and long battery life for large area surveillance." },
+        { name:"Land Survey and Mapping Drone", price:27000, desc: "Equipped with telemetry modules to send flight data and capture images for topographic modeling." },
+        { name:"Mini Quadcopter Drone (ESP32)", price:3900, desc: "A budget-friendly DIY drone project built on the powerful ESP32 platform for stable flight." }
     ];
 
     const iiotProjects = [
-        { name:"Industrial Conveyor Sorting System (Multi Sensor)", price:11000 },
-        { name:"Advanced RFID + Cloud Attendance System", price:4000 },
-        { name:"IoT Smart Agriculture Automation System", price:8000 },
-        { name:"Sanitary Pad and Tissue Decomposer", price:6000 },
-        { name:"Weather Monitoring System", price:2000 },
-        { name:"GPS Tracking System", price:2200 },
-        { name:"Smart Home Automation", price:2300 },
-        { name:"Smart Dustbin", price:1800},
-        { name:"Smart Parking with Gate Control", price:2000 },
-        { name:"IoT Attendance System (ESP8266)", price:3500 },
-        { name:"Automatic Plant Watering System", price:1900 },
-        { name:"IoT Water Quality Monitoring System", price:2800 },
-        { name:"Touchless Hand Sanitizer Machine", price:1800 },
-        { name:"Smart Blind Stick", price:1500 },
-        { name:"Smart Toll Gate System (RFID Based)", price:2300 },
-        { name:"Smart Waste Level Monitoring System", price:2300 },
-        { name:"GSM Based Fire Alert System", price:3800 },
-        { name:"Rain Sensing Smart Window / Clothes Protector", price:2900 },
-        { name:"Automatic Door Opening System (PIR)", price:2700 },
-        { name:"Parking Slot Availability Indicator", price:2700 },
-        { name:"Smart Alarm Clock with Display", price:2700 },
-        { name:"Medicine Reminder System", price:2600 }
+        { name:"Industrial Conveyor Sorting System (Multi Sensor)", price:11000, desc: "Uses a conveyor belt with multiple sensors to sort items based on height, color, or material." },
+        { name:"Advanced RFID + Cloud Attendance System", price:4000, desc: "Scans RFID tags and instantly logs the data to a Google Sheet or Cloud database via WiFi." },
+        { name:"IoT Smart Agriculture Automation System", price:8000, desc: "Monitors soil moisture and temperature, triggering water pumps only when the plants need it." },
+        { name:"Sanitary Pad and Tissue Decomposer", price:6000, desc: "An eco-friendly heating system designed to safely incinerate waste with minimal smoke emission." },
+        { name:"Weather Monitoring System", price:2000, desc: "Captures air pressure, humidity, and temperature data, displaying it on a local OLED screen and IoT dashboard." },
+        { name:"GPS Tracking System", price:2200, desc: "Uses a GSM/GPS module to send real-time coordinates of a vehicle to a mobile device via SMS or App." },
+        { name:"Smart Home Automation", price:2300, desc: "Allows control of lights, fans, and appliances via a web dashboard or voice assistant from anywhere." },
+        { name:"Smart Dustbin", price:1800, desc: "Detects hand proximity to open the lid automatically and notifies when the bin is full using IoT." },
+        { name:"Smart Parking with Gate Control", price:2000, desc: "Tracks available slots and opens the entry gate only if a space is free, using IR sensors." },
+        { name:"IoT Attendance System (ESP8266)", price:3500, desc: "A portable attendance device that connects to office WiFi to sync employee logs to the cloud." },
+        { name:"Automatic Plant Watering System", price:1900, desc: "A standalone system that pumps water when soil moisture drops below a pre-set percentage." },
+        { name:"IoT Water Quality Monitoring System", price:2800, desc: "Measures pH and turbidity of water, sending alerts if the water becomes unsafe for consumption." },
+        { name:"Touchless Hand Sanitizer Machine", price:1800, desc: "An ultrasonic-triggered pump system that dispenses a fixed amount of liquid without any physical touch." },
+        { name:"Smart Blind Stick", price:1500, desc: "Features ultrasonic sensors and water detection to alert visually impaired users of obstacles or puddles." },
+        { name:"Smart Toll Gate System (RFID Based)", price:2300, desc: "Deducts toll amounts automatically from an RFID tag and operates the barrier servo motor." },
+        { name:"Smart Waste Level Monitoring System", price:2300, desc: "Uses cloud-based alerts to notify municipal services when trash bins reach 90% capacity." },
+        { name:"GSM Based Fire Alert System", price:3800, desc: "Sends an immediate SMS and call to the user if smoke or fire is detected in a remote building." },
+        { name:"Rain Sensing Smart Window / Clothes Protector", price:2900, desc: "Detects raindrops and automatically closes windows or pulls back a motorized clothesline." },
+        { name:"Automatic Door Opening System (PIR)", price:2700, desc: "Detects human heat signature using a PIR sensor to open doors in malls or shops automatically." },
+        { name:"Parking Slot Availability Indicator", price:2700, desc: "Uses LEDs (Red/Green) at each parking spot to show drivers available spaces from a distance." },
+        { name:"Smart Alarm Clock with Display", price:2700, desc: "Syncs time via NTP (Internet) and features customizable alarms with a bright digital display." },
+        { name:"Medicine Reminder System", price:2600, desc: "Beeps and flashes at scheduled times to remind patients to take their medication, with a display showing the pill name." }
     ];
 
     const arduinoProjects = [
-        { name:"Arduino Smart Door Lock with RFID and Fire Detection", price:2500 },
-        { name:"Heartbeat Monitoring System with LED Display", price:1900 },
-        { name:"Obstacle Radar Scanner", price:2000 },
-        { name:"Intelligent Braking System", price:2800 },
-        { name:"Gas Leakage Detection and Alert System (MQ Sensor)", price:1900 },
-        { name:"Tilt Based LED Flow System", price:1600 },
-        { name:"Automatic Touchless Water Dispenser", price:2200 },
-        { name:"Arduino Speed Detector System", price:1600 },
-        { name:"Digital Distance Measurement System", price:1100 },
-        { name:"Memory Game System", price:1500 },
-        { name:"RPM Measurer / Speedometer", price:2400 },
-        { name:"LED Matrix Tower Display System", price:2100 },
-        { name:"Smart Water Level Indicator System", price:1400 },
-        { name:"Automatic Crossing Gate System", price:1700 },
-        { name:"Smart Height Measurement System", price:1800 }
+        { name:"Arduino Smart Door Lock with RFID and Fire Detection", price:2500, desc: "Unlocks via an authorized card and features an emergency override if fire is detected inside." },
+        { name:"Heartbeat Monitoring System with LED Display", price:1900, desc: "Uses a pulse sensor to calculate BPM and shows the heartbeat wave on a 16x2 LCD screen." },
+        { name:"Obstacle Radar Scanner", price:2000, desc: "Maps surroundings by rotating a sensor 180 degrees and visualizing the data on a Processing screen." },
+        { name:"Intelligent Braking System", price:2800, desc: "Slows down motors gradually when an obstacle is detected, preventing sudden mechanical jerks." },
+        { name:"Gas Leakage Detection and Alert System (MQ Sensor)", price:1900, desc: "Triggers a loud buzzer and turns on an exhaust fan if LPG or Smoke concentration is too high." },
+        { name:"Tilt Based LED Flow System", price:1600, desc: "Changes the pattern of LED lights based on the angle of the device using a tilt sensor." },
+        { name:"Automatic Touchless Water Dispenser", price:2200, desc: "A simple IR sensor-based solenoid valve system for hygienic, contact-free water filling." },
+        { name:"Arduino Speed Detector System", price:1600, desc: "Measures the time taken for a vehicle to pass between two sensors to calculate and display speed." },
+        { name:"Digital Distance Measurement System", price:1100, desc: "Replaces traditional tape measures by calculating distance using high-frequency sound waves." },
+        { name:"Memory Game System", price:1500, desc: "Tests your brain by asking you to repeat a sequence of flashing LEDs and sounds." },
+        { name:"RPM Measurer / Speedometer", price:2400, desc: "Uses an IR interrupt sensor to count wheel rotations and calculate Revolutions Per Minute." },
+        { name:"LED Matrix Tower Display System", price:2100, desc: "Displays scrolling text messages or animations on an 8x8 LED matrix driven by Arduino." },
+        { name:"Smart Water Level Indicator System", price:1400, desc: "Uses a multi-level probe to show the exact height of water in a tank using a series of LEDs." },
+        { name:"Automatic Crossing Gate System", price:1700, desc: "Detects an oncoming toy train or car and lowers the gate to stop traffic automatically." },
+        { name:"Smart Height Measurement System", price:1800, desc: "A wall-mounted ultrasonic device that displays a person's height in cm on a digital screen." }
     ];
 
- const componentsList = [
-    { name: "Arduino Uno R3", price: 650 },
-    { name: "ESP32 Dev Board", price: 450 },
-    { name: "HC-SR04 Ultrasonic Sensor", price: 80 },
-    { name: "SG90 Servo Motor", price: 110 },
-    { name: "L298N Motor Driver", price: 180 },
-    { name: "MQ-2 Gas Sensor", price: 150 },
-    { name: "PIR Motion Sensor", price: 95 },
-
-    { name: "Arduino Nano", price: 185 },
-    { name: "NodeMCU ESP8266", price: 210 },
-    { name: "DHT11 Temperature Sensor", price: 60 },
-    { name: "DS18B20 Temperature Sensor", price: 80 },
-    { name: "RFID RC522 Module", price: 75 },
-    { name: "MAX7219 Dot Matrix Display", price: 295 },
-    { name: "16x2 LCD with I2C", price: 40 },
-    { name: "0.96 OLED Display", price: 180 },
-    { name: "2.4 TFT Display", price: 540 },
-
-    { name: "IR Sensor Module", price: 30 },
-    { name: "Water Level Sensor", price: 25 },
-    { name: "MPU9250 Gyro Sensor", price: 460 },
-    { name: "HC-05 Bluetooth Module", price: 265 },
-
-    { name: "2 Channel Relay Module", price: 80 },
-    { name: "4 Channel Relay Module", price: 150 },
-
-    { name: "Submersible Water Pump", price: 50 },
-    { name: "3V DC Motor", price: 20 },
-
-    { name: "Car Chassis 2 Wheel", price: 290 },
-    { name: "Car Chassis 4 Wheel", price: 600 },
-
-    { name: "Piezo Buzzer", price: 35 },
-    { name: "LED 5mm", price: 3 },
-    { name: "LED 3mm", price: 2 },
-    { name: "1K Resistor", price: 2 },
-    { name: "Ceramic Capacitor", price: 2 },
-    { name: "1N4007 Diode", price: 2 },
-
-    { name: "DC Power Jack", price: 35 },
-    { name: "Jumper Wires", price: 2 },
-    { name: "Ribbon Cable", price: 38 }
-];
+    const componentsList = [
+        { name: "Arduino Uno R3", price: 650, desc: "The brain of most electronics projects; programmable via USB to control sensors and motors." },
+        { name: "ESP32 Dev Board", price: 450, desc: "Powerful microcontroller with built-in WiFi and Bluetooth, ideal for IoT applications." },
+        { name: "HC-SR04 Ultrasonic Sensor", price: 80, desc: "Measures distance by sending sound waves and timing their echo return." },
+        { name: "SG90 Servo Motor", price: 110, desc: "Small motor that can be programmed to rotate precisely to any angle between 0 and 180 degrees." },
+        { name: "L298N Motor Driver", price: 180, desc: "An interface module that allows a microcontroller to control the speed and direction of DC motors." },
+        { name: "MQ-2 Gas Sensor", price: 150, desc: "Detects presence of LPG, Smoke, and Carbon Monoxide in the air." },
+        { name: "PIR Motion Sensor", price: 95, desc: "Detects human movement by measuring changes in infrared heat signatures." }
+    ];
 
     let cart = [];
     let currentItem = {};
@@ -374,8 +364,7 @@
         scrollList.forEach(p => {
             const div = document.createElement('div');
             div.className = "card store-card p-5 rounded-2xl cursor-pointer project-item";
-            div.setAttribute('data-name', p.name.toLowerCase());
-            div.onclick = () => openProduct(p.name, p.price);
+            div.onclick = () => openProduct(p.name, p.price, p.desc);
             div.innerHTML = `
                 <div class="w-full h-24 bg-gray-100 rounded-xl mb-3 flex items-center justify-center text-gray-300">
                     <i class="fas ${iconClass} fa-lg"></i>
@@ -415,10 +404,11 @@
         container.addEventListener('touchend', () => isPaused = false);
     }
 
-    function openProduct(name, price) {
-        currentItem = { name, price };
+    function openProduct(name, price, desc) {
+        currentItem = { name, price, desc };
         document.getElementById('modal-title').innerText = name;
         document.getElementById('modal-price').innerText = "₹" + price;
+        document.getElementById('modal-desc').innerText = desc; // Restores the description
         document.getElementById('product-modal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
@@ -439,11 +429,43 @@
         else pill.classList.remove('visible');
     }
 
+    function openCartModal() {
+        const cartList = document.getElementById('cart-items-list');
+        const totalDisplay = document.getElementById('cart-total-display');
+        cartList.innerHTML = "";
+        let total = 0;
+        cart.forEach((item, index) => {
+            total += item.price;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = "flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100";
+            itemDiv.innerHTML = `
+                <div class="flex-1 pr-4">
+                    <p class="text-sm font-bold text-gray-800 leading-tight">${item.name}</p>
+                    <p class="text-xs text-teal-600 font-bold">₹${item.price}</p>
+                </div>
+                <button onclick="removeFromCart(${index})" class="text-red-400 p-2"><i class="fas fa-trash-alt"></i></button>
+            `;
+            cartList.appendChild(itemDiv);
+        });
+        totalDisplay.innerText = "₹" + total;
+        document.getElementById('cart-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartPill();
+        if (cart.length === 0) closeCartModal(); else openCartModal();
+    }
+
     function checkoutCart() {
         if(cart.length === 0) return;
         const itemsList = cart.map(i => `${i.name} (₹${i.price})`).join(", ");
         const total = cart.reduce((sum, item) => sum + item.price, 0);
         document.getElementById('message').value = `Hello AEERONEX, I am interested in: ${itemsList}. Total: ₹${total}. Please contact me to proceed.`;
+        closeCartModal();
         window.location.hash = "contact-section";
         document.getElementById('message').focus();
     }
@@ -457,7 +479,10 @@
 
     function filterProjects() {
         const input = document.getElementById('projectSearch').value.toLowerCase();
-        document.querySelectorAll('.project-item').forEach(card => card.style.display = card.getAttribute('data-name').includes(input) ? "block" : "none");
+        document.querySelectorAll('.project-item').forEach(card => {
+            const name = card.querySelector('h4').innerText.toLowerCase();
+            card.style.display = name.includes(input) ? "block" : "none";
+        });
     }
 
     function discussIdea(type) { 
