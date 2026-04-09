@@ -197,8 +197,7 @@
 
     <div id="product-modal">
         <div class="modal-content bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative">
-            <div id="modal-image-header" class="w-full h-72 bg-gray-50 flex items-center justify-center overflow-hidden">
-                </div>
+            <div id="modal-image-header" class="w-full h-72 bg-gray-50 flex items-center justify-center overflow-hidden"></div>
             <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-gray-400 hover:text-black z-10">&times;</button>
             
             <div class="p-8">
@@ -212,6 +211,9 @@
                     <button onclick="addToCart()" class="bg-gray-100 text-gray-800 py-4 rounded-2xl font-bold uppercase text-xs">Add to Cart</button>
                     <button onclick="orderNow()" class="btn-primary text-white py-4 rounded-2xl font-bold uppercase text-xs">Buy Now</button>
                 </div>
+                <button onclick="closeModal()" class="w-full mt-4 py-2 text-gray-400 text-sm hover:text-red-500 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Store
+                </button>
             </div>
         </div>
     </div>
@@ -223,7 +225,7 @@
                 <input type="text" id="name" placeholder="Full Name" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
                 <input type="email" id="email" placeholder="Email Address" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
                 <input type="tel" id="phone" placeholder="WhatsApp Number" required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500">
-                <textarea id="message" rows="4" placeholder="Mention your requirements..." required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500"></textarea>
+                <textarea id="message" rows="6" placeholder="Mention your requirements..." required class="w-full p-4 rounded-xl border bg-gray-50 outline-none focus:border-teal-500"></textarea>
                 <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold text-lg shadow-lg uppercase tracking-widest text-white">Submit Inquiry</button>
             </form>
         </div>
@@ -231,48 +233,27 @@
 
     <footer class="bg-[#FDFBF7] border-t border-[#E6DED3] pt-16 pb-8">
         <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
-    
             <div>
-                <div class="text-3xl font-bold gradient-text mb-4 tracking-wide logo-font">
-                    AEERONEX
-                </div>
-                <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-                    Providing high-quality technology solutions, hardware projects, and professional mentorship for engineers and innovators.
-                </p>
+                <div class="text-3xl font-bold gradient-text mb-4 tracking-wide logo-font">AEERONEX</div>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">Providing high-quality technology solutions, hardware projects, and professional mentorship for engineers and innovators.</p>
             </div>
-    
             <div>
                 <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Contact Us</h4>
                 <ul class="space-y-5 text-gray-700">
                     <li class="flex items-center justify-center md:justify-start gap-3">
-                        <div class="flex gap-2 text-green-600 text-lg">
-                            <i class="fas fa-phone-alt"></i>
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <a href="tel:+917855021303" class="hover:text-teal-600">
-                            +91 78550 21303
-                        </a>
+                        <div class="flex gap-2 text-green-600 text-lg"><i class="fas fa-phone-alt"></i><i class="fab fa-whatsapp"></i></div>
+                        <a href="tel:+917855021303" class="hover:text-teal-600">+91 78550 21303</a>
                     </li>
-    
                     <li class="flex items-center justify-center md:justify-start gap-3">
-                        <div class="flex gap-2 text-green-600 text-lg">
-                            <i class="fas fa-phone-alt"></i>
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <a href="tel:+918637289753" class="hover:text-teal-600">
-                            +91 86372 89753
-                        </a>
+                        <div class="flex gap-2 text-green-600 text-lg"><i class="fas fa-phone-alt"></i><i class="fab fa-whatsapp"></i></div>
+                        <a href="tel:+918637289753" class="hover:text-teal-600">+91 86372 89753</a>
                     </li>
-    
                     <li class="flex items-center justify-center md:justify-start gap-3 pt-2 border-t border-gray-200">
                         <i class="fas fa-envelope text-indigo-600"></i>
-                        <a href="mailto:aeronexproj@gmail.com" class="hover:text-teal-600">
-                            aeronexproj@gmail.com
-                        </a>
+                        <a href="mailto:aeronexproj@gmail.com" class="hover:text-teal-600">aeronexproj@gmail.com</a>
                     </li>
                 </ul>
             </div>
-    
             <div>
                 <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Navigation</h4>
                 <div class="flex flex-col space-y-3 text-gray-700">
@@ -282,10 +263,7 @@
                 </div>
             </div>
         </div>
-    
-        <div class="mt-16 pt-8 border-t border-gray-200 text-center text-gray-400 text-sm">
-            © 2024 AEERONEX. All Rights Reserved.
-        </div>
+        <div class="mt-16 pt-8 border-t border-gray-200 text-center text-gray-400 text-sm">© 2024 AEERONEX. All Rights Reserved.</div>
     </footer>
 </div>
 
@@ -311,7 +289,7 @@
 </div>
 
 <script>
-    // --- PROJECTS DATA ---
+    // --- DATA ---
     const roboticsProjects = [
         { name: "Advanced ESP32 Surveillance Rover (Live Streaming + Control)", price: 8500, image: "https://mbatechmeds.com/wp-content/uploads/2021/08/Cam_robot.png", desc: "Uses ESP32-CAM to stream real-time video over WiFi while being controlled via a mobile app." },
         { name: "Human Following Robot", price: 5500, image: "https://shop.techatronic.com/wp-content/uploads/2025/01/Untitled-design-10.png", desc: "Utilizes ultrasonic or IR sensors to detect human movement and maintain a specific distance automatically." },
@@ -538,28 +516,90 @@
     }
 
     function addToCart() { cart.push(currentItem); updateCartPill(); closeModal(); }
+    
     function updateCartPill() {
         const pill = document.getElementById('cart-pill');
         document.getElementById('cart-pill-count').innerText = `${cart.length} ITEMS`;
         pill.classList.toggle('visible', cart.length > 0);
     }
+
+    // --- REPLACED openCartModal SECTION ---
     function openCartModal() {
         const list = document.getElementById('cart-items-list');
-        let total = 0; list.innerHTML = "";
-        cart.forEach((item) => {
+        let total = 0;
+        list.innerHTML = "";
+
+        cart.forEach((item, index) => {
             total += item.price;
-            list.innerHTML += `<div class="flex justify-between text-sm py-1 border-b"><span>${item.name}</span><b>₹${item.price}</b></div>`;
+
+            list.innerHTML += `
+                <div class="flex justify-between items-center p-2 border-b">
+                    <div>
+                        <p class="text-sm font-bold">${item.name}</p>
+                        <p class="text-xs text-teal-600">₹${item.price}</p>
+                    </div>
+                    <button onclick="removeFromCart(${index})"
+                        class="text-red-400 hover:text-red-600">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>`;
         });
+
         document.getElementById('cart-total-display').innerText = "₹" + total;
         document.getElementById('cart-modal').style.display = 'flex';
     }
-    function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; }
-    function checkoutCart() {
-        document.getElementById('message').value = "Interested in: " + cart.map(i => i.name).join(", ");
-        closeCartModal(); window.location.hash = "contact-section";
+
+    // --- ADDED removeFromCart FUNCTION ---
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartPill();
+        openCartModal(); // Refresh modal view
     }
-    function orderNow() { checkoutCart(); closeModal(); }
-    function discussIdea(type) { window.location.hash = "contact-section"; document.getElementById('message').value = `Hi, I have a ${type} idea: `; }
+
+    function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; }
+
+    // --- UPDATED CHECKOUT LOGIC ---
+    function checkoutCart() {
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        let totalAmount = 0;
+        let itemStrings = cart.map(item => {
+            totalAmount += item.price;
+            return `• ${item.name} (₹${item.price})`;
+        });
+
+        const detailedMessage = `I am interested in ordering the following items:
+----------------------------------
+${itemStrings.join('\n')}
+----------------------------------
+Sub-total: ₹${totalAmount}
+
+Please provide further details regarding the purchase.`;
+
+        document.getElementById('message').value = detailedMessage;
+        closeCartModal(); 
+        window.location.hash = "contact-section";
+        
+        // Focus the name field for a better user experience
+        setTimeout(() => document.getElementById('name').focus(), 500);
+    }
+
+    function orderNow() { 
+        // Logic for "Buy Now" - clears previous cart and adds just this item
+        cart = [currentItem]; 
+        updateCartPill();
+        checkoutCart(); 
+        closeModal(); 
+    }
+
+    function discussIdea(type) { 
+        window.location.hash = "contact-section"; 
+        document.getElementById('message').value = `Hi, I have a custom ${type} idea I'd like to discuss: \n`; 
+    }
+
     function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; }
 
     function setupInteractiveScroll(container) {
