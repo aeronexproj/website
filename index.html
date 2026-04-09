@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,7 +44,6 @@
 
         .btn-primary { background: linear-gradient(90deg, #6B6EE8, #2AA198); transition: all 0.2s; color: white; border: none; }
         
-        /* Fixed Modal In-to-Out Animation */
         #product-modal { 
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
             z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center;
@@ -229,8 +229,63 @@
         </div>
     </section>
 
-    <footer class="bg-[#FDFBF7] border-t border-[#E6DED3] py-8 text-center text-gray-400 text-sm">
-        © 2024 AEERONEX. All Rights Reserved.
+    <footer class="bg-[#FDFBF7] border-t border-[#E6DED3] pt-16 pb-8">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+    
+            <div>
+                <div class="text-3xl font-bold gradient-text mb-4 tracking-wide logo-font">
+                    AEERONEX
+                </div>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
+                    Providing high-quality technology solutions, hardware projects, and professional mentorship for engineers and innovators.
+                </p>
+            </div>
+    
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Contact Us</h4>
+                <ul class="space-y-5 text-gray-700">
+                    <li class="flex items-center justify-center md:justify-start gap-3">
+                        <div class="flex gap-2 text-green-600 text-lg">
+                            <i class="fas fa-phone-alt"></i>
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <a href="tel:+917855021303" class="hover:text-teal-600">
+                            +91 78550 21303
+                        </a>
+                    </li>
+    
+                    <li class="flex items-center justify-center md:justify-start gap-3">
+                        <div class="flex gap-2 text-green-600 text-lg">
+                            <i class="fas fa-phone-alt"></i>
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <a href="tel:+918637289753" class="hover:text-teal-600">
+                            +91 86372 89753
+                        </a>
+                    </li>
+    
+                    <li class="flex items-center justify-center md:justify-start gap-3 pt-2 border-t border-gray-200">
+                        <i class="fas fa-envelope text-indigo-600"></i>
+                        <a href="mailto:aeronexproj@gmail.com" class="hover:text-teal-600">
+                            aeronexproj@gmail.com
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    
+            <div>
+                <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Navigation</h4>
+                <div class="flex flex-col space-y-3 text-gray-700">
+                    <a href="#about" class="hover:text-teal-600">Home</a>
+                    <a href="#shop" class="hover:text-teal-600">Store</a>
+                    <a href="#contact-section" class="hover:text-teal-600">Inquiry</a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="mt-16 pt-8 border-t border-gray-200 text-center text-gray-400 text-sm">
+            © 2024 AEERONEX. All Rights Reserved.
+        </div>
     </footer>
 </div>
 
@@ -247,7 +302,7 @@
 </div>
 
 <div id="confirm-modal">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
+    <div class="bg-white rounded-3xl max-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
         <i class="fas fa-check-circle text-6xl text-teal-500 mb-4"></i>
         <h2 class="text-2xl font-bold mb-2 text-indigo-600">Thank You!</h2>
         <p class="text-gray-600 mb-6">Details received. We'll be in touch.</p>
@@ -334,7 +389,7 @@
         { name: "Arduino Mega", price: 900, image: "https://www.mouser.in/images/arduino/lrg/A000067_SPL.jpg", desc: "Board with more I/O pins for complex robotics." },
         { name: "HC-05 Bluetooth Module", price: 260, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyuVHU6xvUiil8-_402eOidwyPDn_wDsP1Lg&s", desc: "Wireless module for Bluetooth communication." },
         { name: "GSM Module", price: 370, image: "https://www.indianhobbycenter.com/cdn/shop/products/sim800l-gsm-gprs-module-800x800-1.jpg?v=1655366075&width=1445", desc: "Used for SMS and calls in IoT systems." },
-        { name: "GPS Module", price: 250, image: "https://m.media-amazon.com/images/I/516HJgU86jL._AC_UF1000,1000_QL80_.jpg", desc: "Provides real-time location tracking." },
+        { name: "GPS Module", price: 370, image: "https://m.media-amazon.com/images/I/516HJgU86jL._AC_UF1000,1000_QL80_.jpg", desc: "Provides real-time location tracking." },
         { name: "DHT11 Sensor", price: 70, image: "https://m.media-amazon.com/images/S/aplus-media-library-service-media/2971b32c-0f60-4fc7-9266-fb01550c1c6e.__CR0,0,300,300_PT0_SX300_V1___.jpg", desc: "Measures temperature and humidity." },
         { name: "DS18B20 Sensor", price: 80, image: "https://www.indianhobbycenter.com/cdn/shop/products/ds18b20-waterproof-temperature-sensor-probe-1-800x800-1.jpg?v=1655367365", desc: "High-accuracy digital temperature sensor." },
         { name: "Soil Moisture Sensor", price: 75, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_i0LPzSkpxR_wCRNfDOrQtf31md9ZxVFg_A&s", desc: "Detects soil moisture for irrigation." },
@@ -391,7 +446,6 @@
             div.setAttribute('data-price', p.price);
             div.onclick = () => openProduct(p, iconClass);
             
-            // USE OBJECT-CONTAIN TO PREVENT CUTTING
             const media = (p.image && p.image !== "") 
                 ? `<img src="${p.image}" class="w-full h-32 object-contain rounded-xl mb-3">`
                 : `<div class="w-full h-32 bg-gray-100 rounded-xl mb-3 flex items-center justify-center text-gray-300">
@@ -417,7 +471,6 @@
         document.getElementById('modal-price').innerText = "₹" + p.price;
         document.getElementById('modal-desc').innerText = p.desc;
         
-        // USE OBJECT-CONTAIN HERE ALSO
         header.innerHTML = (p.image && p.image !== "")
             ? `<img src="${p.image}" class="w-full h-full object-contain">`
             : `<i class="fas ${iconClass} text-6xl text-gray-200"></i>`;
@@ -539,7 +592,6 @@
         });
     });
 
-    // Initialize
     createCards(roboticsProjects, 'robotics-list', 'fa-robot');
     createCards(iiotProjects, 'iiot-list', 'fa-network-wired');
     createCards(arduinoProjects, 'arduino-list', 'fa-microchip');
