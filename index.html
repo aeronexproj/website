@@ -209,7 +209,6 @@
                     <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
                 </div>
 
-                <!-- UPDATED: Custom SVG Drone Icon -->
                 <div class="service-card" onclick="requestService('Making & Building of Drones', 'I am interested in custom drone making/building. Here are my specs and requirements:')">
                     <div class="service-icon-wrap">
                         <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -219,17 +218,13 @@
                                     <stop offset="100%" stop-color="#2AA198"/>
                                 </linearGradient>
                             </defs>
-                            <!-- arms -->
                             <path d="M24 24 L8 8 M24 24 L40 8 M24 24 L8 40 M24 24 L40 40"
                                   stroke="url(#droneGrad)" stroke-width="2.5" stroke-linecap="round"/>
-                            <!-- rotors -->
                             <circle cx="8" cy="8" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
                             <circle cx="40" cy="8" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
                             <circle cx="8" cy="40" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
                             <circle cx="40" cy="40" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
-                            <!-- body -->
                             <rect x="19" y="19" width="10" height="10" rx="2.5" fill="url(#droneGrad)"/>
-                            <!-- camera gimbal -->
                             <circle cx="24" cy="31" r="2.2" fill="url(#droneGrad)"/>
                         </svg>
                     </div>
@@ -645,6 +640,9 @@
     let docAddonSelected = false;
     const DOC_ADDON_PRICE = 499;
 
+    // Base64 storage variable for the uploaded repair image
+    let repairImageBase64 = "";
+
     function createCards(list, containerId, iconClass) {
         const container = document.getElementById(containerId);
         list.forEach(p => {
@@ -848,6 +846,7 @@ Please provide further details regarding the purchase.`;
 
     function closeConfirm() { document.getElementById('confirm-modal').classList.remove('show'); }
 
+    // Convert repair image file to Base64 String
     function previewRepairImage(event) {
         const file = event.target.files[0];
         if (file) {
@@ -856,6 +855,9 @@ Please provide further details regarding the purchase.`;
                 document.getElementById('repair-image-preview').src = e.target.result;
                 document.getElementById('upload-placeholder').classList.add('hidden');
                 document.getElementById('repair-image-preview-wrap').classList.remove('hidden');
+                
+                // Store Base64 string for EmailJS payload
+                repairImageBase64 = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -866,7 +868,7 @@ Please provide further details regarding the purchase.`;
         const desc = document.getElementById('repair-desc').value;
         const name = document.getElementById('repair-name').value;
         const phone = document.getElementById('repair-phone').value;
-        const hasImage = !document.getElementById('repair-image-preview-wrap').classList.contains('hidden');
+        const hasImage = repairImageBase64 !== "";
 
         const repairMessage = `[PROJECT REPAIR REQUEST]
 ----------------------------------
@@ -877,17 +879,28 @@ Image Attached: ${hasImage ? "Yes" : "No"}
 Issue Description:
 ${desc}`;
 
+        const submitBtn = document.getElementById('repair-submit-btn');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = "SENDING...";
+        submitBtn.disabled = true;
+
         emailjs.send("service_cs9akh6", "template_es7nsoo", {
             name: name,
-            message: repairMessage
+            phone: phone,
+            message: repairMessage,
+            image_data: repairImageBase64 // Sends base64 image data to EmailJS
         }).then(() => {
             showRepairPopup();
             document.getElementById('repair-form').reset();
             document.getElementById('upload-placeholder').classList.remove('hidden');
             document.getElementById('repair-image-preview-wrap').classList.add('hidden');
+            repairImageBase64 = "";
         }).catch((err) => {
             console.error("EmailJS error:", err);
             showRepairPopup();
+        }).finally(() => {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
         });
     }
 
