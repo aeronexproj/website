@@ -27,32 +27,33 @@
 
         .card { background: #FDFBF7; border: 1px solid #E6DED3; transition: transform 0.3s, box-shadow 0.3s; }
         .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
-        
-        .custom-idea-card { 
+
+        .custom-idea-card {
             background: linear-gradient(135deg, #6B6EE8 0%, #2AA198 100%);
             color: white; border: none; flex: 0 0 280px; min-width: 280px;
         }
 
         .store-card { flex: 0 0 260px; min-width: 260px; }
-        
-        .snap-x { 
+
+        .snap-x {
             display: flex; overflow-x: auto; gap: 1.5rem; padding: 10px 0 30px 0;
-            white-space: nowrap; scrollbar-width: none; -ms-overflow-style: none; 
+            white-space: nowrap; scrollbar-width: none; -ms-overflow-style: none;
             cursor: grab; scroll-snap-type: x proximity;
         }
         .snap-x::-webkit-scrollbar { display: none; }
 
         .btn-primary { background: linear-gradient(90deg, #6B6EE8, #2AA198); transition: all 0.2s; color: white; border: none; }
-        
-        #product-modal { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
+        .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); }
+
+        #product-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
             z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.3s ease;
         }
         #product-modal.show { opacity: 1; display: flex; }
-        #product-modal .modal-content { 
-            transform: scale(0.7); 
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        #product-modal .modal-content {
+            transform: scale(0.7);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #product-modal.show .modal-content { transform: scale(1); }
 
@@ -70,10 +71,44 @@
         #cart-pill.visible { transform: translateX(-50%) translateY(0); }
         .pill-icon-circle { background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
 
-        #confirm-modal, #cart-modal { 
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
-            z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center; 
+        #confirm-modal, #cart-modal, #repair-popup-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 10000; backdrop-filter: blur(8px); align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
         }
+        #confirm-modal.show, #cart-modal.show, #repair-popup-modal.show {
+            display: flex; opacity: 1;
+        }
+
+        .service-card {
+            background: #FDFBF7; border: 1px solid #E6DED3; border-radius: 1.25rem;
+            padding: 2rem 1.5rem; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: #2AA198; }
+        .service-icon-wrap {
+            width: 56px; height: 56px; border-radius: 1rem;
+            background: linear-gradient(135deg, rgba(107,110,232,0.12), rgba(42,161,152,0.12));
+            display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;
+        }
+        .service-icon-wrap i { background: linear-gradient(135deg, #6B6EE8, #2AA198); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.5rem; }
+        .service-arrow { opacity: 0; transform: translateX(-6px); transition: all 0.3s; }
+        .service-card:hover .service-arrow { opacity: 1; transform: translateX(0); }
+
+        #trust-bar { background: linear-gradient(120deg, #2B2B60 0%, #1F2A4D 55%, #17323A 100%); }
+        .trust-stat-num { background: linear-gradient(90deg, #A5A8FF, #6BE6D6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .trust-divider { border-left: 1px solid rgba(255,255,255,0.12); }
+
+        #repair-section { background: #FDFBF7; }
+        .repair-step { border: 1px solid #E6DED3; background: white; }
+
+        .doc-toggle { display: flex; align-items: center; justify-content: space-between; border: 1px dashed #2AA198; background: rgba(42,161,152,0.06); border-radius: 1rem; padding: 12px 16px; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #d6d0c4; transition: 0.3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+        input:checked + .slider { background: linear-gradient(90deg, #6B6EE8, #2AA198); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
@@ -122,7 +157,9 @@
             <div class="logo-font text-2xl gradient-text font-bold">AEERONEX</div>
             <nav class="hidden md:flex space-x-8 font-medium">
                 <a href="#about" class="hover:text-teal-500">About</a>
+                <a href="#services" class="hover:text-teal-500">Services</a>
                 <a href="#shop" class="hover:text-teal-500">Store</a>
+                <a href="#repair-section" class="hover:text-teal-500">Repair</a>
                 <a href="#contact-section" class="hover:text-teal-500">Contact</a>
             </nav>
         </div>
@@ -132,6 +169,105 @@
         <h1 class="text-4xl md:text-6xl font-bold mb-6">Building <span class="gradient-text">Practical Technology</span> Projects</h1>
         <p class="max-w-3xl mx-auto text-xl text-gray-600 mb-10">Premium hardware, source code, and mentorship for all technology domains.</p>
         <a href="#shop" class="btn-primary px-10 py-4 rounded-lg text-lg font-semibold inline-block shadow-lg uppercase tracking-widest text-white">Browse Projects</a>
+    </section>
+
+    <section id="services" class="py-20 px-6">
+        <div class="container mx-auto">
+            <div class="text-center mb-14">
+                <p class="text-teal-600 font-bold uppercase tracking-widest text-sm mb-2">End-to-end support</p>
+                <h2 class="text-4xl font-bold mb-4">More Than Just <span class="gradient-text">Kits & Components</span></h2>
+                <p class="max-w-2xl mx-auto text-gray-600">From the first sketch to the final viva, here's everything we handle so your project actually works — and you can explain why it works.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <div class="service-card" onclick="requestService('3D CAD Modeling', 'I need help with 3D CAD modeling for a project. Here are my requirements:')">
+                    <div class="service-icon-wrap"><i class="fas fa-cube"></i></div>
+                    <h3 class="text-lg font-bold mb-2">3D CAD Modeling</h3>
+                    <p class="text-sm text-gray-600 mb-4">Precision part and enclosure designs, built for real-world fabrication — not just renders.</p>
+                    <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
+                </div>
+
+                <div class="service-card" onclick="requestService('3D Printing & Prototyping', 'I need a part or enclosure 3D printed / prototyped. Here are my requirements:')">
+                    <div class="service-icon-wrap"><i class="fas fa-print"></i></div>
+                    <h3 class="text-lg font-bold mb-2">3D Printing & Prototyping</h3>
+                    <p class="text-sm text-gray-600 mb-4">High-quality prints and quick-turnaround prototypes so your robot stops looking like a breadboard.</p>
+                    <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
+                </div>
+
+                <div class="service-card" onclick="requestService('Documentation & Report Preparation', 'I need help with complete project documentation / report preparation. Here are my requirements:')">
+                    <div class="service-icon-wrap"><i class="fas fa-file-alt"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Documentation & Reports</h3>
+                    <p class="text-sm text-gray-600 mb-4">Synopsis, detailed reports, and viva-ready documentation with full academic support.</p>
+                    <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
+                </div>
+
+                <div class="service-card" onclick="scrollToRepair()">
+                    <div class="service-icon-wrap"><i class="fas fa-tools"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Testing & Repair</h3>
+                    <p class="text-sm text-gray-600 mb-4">We test, diagnose, and repair non-working projects until they're 100% functional.</p>
+                    <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
+                </div>
+
+                <!-- UPDATED: Custom SVG Drone Icon -->
+                <div class="service-card" onclick="requestService('Making & Building of Drones', 'I am interested in custom drone making/building. Here are my specs and requirements:')">
+                    <div class="service-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="droneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#6B6EE8"/>
+                                    <stop offset="100%" stop-color="#2AA198"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- arms -->
+                            <path d="M24 24 L8 8 M24 24 L40 8 M24 24 L8 40 M24 24 L40 40"
+                                  stroke="url(#droneGrad)" stroke-width="2.5" stroke-linecap="round"/>
+                            <!-- rotors -->
+                            <circle cx="8" cy="8" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
+                            <circle cx="40" cy="8" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
+                            <circle cx="8" cy="40" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
+                            <circle cx="40" cy="40" r="6" stroke="url(#droneGrad)" stroke-width="2.2"/>
+                            <!-- body -->
+                            <rect x="19" y="19" width="10" height="10" rx="2.5" fill="url(#droneGrad)"/>
+                            <!-- camera gimbal -->
+                            <circle cx="24" cy="31" r="2.2" fill="url(#droneGrad)"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Making & Building of Drones</h3>
+                    <p class="text-sm text-gray-600 mb-4">Custom quadcopter, hexacopter, and survey drone assembly, tuning, and flight testing.</p>
+                    <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
+                </div>
+
+                <div class="service-card" onclick="requestService('Custom Solutions', 'I have a custom project idea outside the usual categories. Here it is:')">
+                    <div class="service-icon-wrap"><i class="fas fa-lightbulb"></i></div>
+                    <h3 class="text-lg font-bold mb-2">Custom Solutions</h3>
+                    <p class="text-sm text-gray-600 mb-4">Multi-module, industrial, or research-grade builds — if it's electronics, we'll figure it out.</p>
+                    <span class="text-teal-600 font-bold text-xs uppercase tracking-wide flex items-center gap-2">Request this <i class="fas fa-arrow-right service-arrow text-xs"></i></span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="trust-bar" class="py-14 px-6 text-white">
+        <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-3xl md:text-4xl font-bold trust-stat-num logo-font mb-1">100+</div>
+                <p class="text-xs md:text-sm uppercase tracking-wider text-gray-300">Projects Delivered</p>
+            </div>
+            <div class="md:trust-divider md:pl-8">
+                <div class="text-3xl md:text-4xl mb-1"><i class="fas fa-motorcycle text-teal-300"></i></div>
+                <p class="text-xs md:text-sm uppercase tracking-wider text-gray-300">Inside Campus Delivery</p>
+            </div>
+            <div class="md:trust-divider md:pl-8">
+                <div class="text-3xl md:text-4xl mb-1"><i class="fas fa-headset text-teal-300"></i></div>
+                <p class="text-xs md:text-sm uppercase tracking-wider text-gray-300">Post-Delivery Support</p>
+            </div>
+            <div class="md:trust-divider md:pl-8">
+                <div class="text-3xl md:text-4xl mb-1"><i class="fas fa-shield-alt text-teal-300"></i></div>
+                <p class="text-xs md:text-sm uppercase tracking-wider text-gray-300">100% Working Solutions</p>
+            </div>
+        </div>
     </section>
 
     <section id="shop" class="py-10">
@@ -145,7 +281,7 @@
                         <i class="fas fa-times-circle fa-lg"></i>
                     </button>
                 </div>
-                
+
                 <div class="mt-4 flex flex-wrap justify-center gap-2">
                     <button onclick="filterByBudget(0, 3000, this)" class="budget-btn bg-white px-4 py-1 rounded-full text-xs font-bold">₹1k - ₹3k</button>
                     <button onclick="filterByBudget(3001, 5000, this)" class="budget-btn bg-white px-4 py-1 rounded-full text-xs font-bold">₹3k - ₹5k</button>
@@ -154,7 +290,7 @@
                 </div>
                 <p id="noResultsMsg" class="hidden mt-6 text-gray-500 italic">No matches found.</p>
             </div>
-            
+
             <div class="mb-12 project-category">
                 <h3 class="text-xl font-bold mb-4 text-indigo-600"><i class="fas fa-robot mr-3"></i> Robotics Projects</h3>
                 <div class="snap-x" id="robotics-list">
@@ -199,7 +335,7 @@
         <div class="modal-content bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative">
             <div id="modal-image-header" class="w-full h-72 bg-gray-50 flex items-center justify-center overflow-hidden"></div>
             <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-gray-400 hover:text-black z-10">&times;</button>
-            
+
             <div class="p-8">
                 <h2 id="modal-title" class="text-2xl font-bold mb-2"></h2>
                 <p id="modal-price" class="text-2xl text-teal-600 font-bold mb-4"></p>
@@ -217,6 +353,74 @@
             </div>
         </div>
     </div>
+
+    <section id="repair-section" class="py-24 border-t">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-12">
+                <p class="text-teal-600 font-bold uppercase tracking-widest text-sm mb-2">Not new — just not working?</p>
+                <h2 class="text-4xl font-bold mb-4">Project Testing <span class="gradient-text">& Repair</span></h2>
+                <p class="text-gray-600 leading-relaxed max-w-2xl mx-auto">Bought a kit somewhere else, or your own build stopped responding right before the demo? We diagnose the fault, fix it, and hand it back 100% functional.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <form id="repair-form" onsubmit="submitRepairRequest(event)" class="bg-white p-6 rounded-2xl border border-[#E6DED3] shadow-sm space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-gray-700">Upload Project Photo / Issue Image</label>
+                        <div class="border-2 border-dashed border-gray-300 hover:border-teal-500 rounded-xl p-4 text-center cursor-pointer transition-colors relative bg-gray-50" onclick="document.getElementById('repair-image-input').click()">
+                            <input type="file" id="repair-image-input" accept="image/*" class="hidden" onchange="previewRepairImage(event)">
+                            <div id="upload-placeholder">
+                                <i class="fas fa-camera text-3xl text-teal-600 mb-2"></i>
+                                <p class="text-sm font-medium text-gray-700">Click to upload photo or capture from camera</p>
+                                <p class="text-xs text-gray-400 mt-1">PNG, JPG, or WEBP formats supported</p>
+                            </div>
+                            <div id="repair-image-preview-wrap" class="hidden flex flex-col items-center">
+                                <img id="repair-image-preview" src="" alt="Project Issue Preview" class="max-h-40 rounded-lg object-contain shadow-sm mb-2">
+                                <span class="text-xs text-teal-600 font-bold uppercase tracking-wider"><i class="fas fa-check-circle mr-1"></i> Image Attached (Click to change)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="repair-desc" class="block text-sm font-bold mb-1 text-gray-700">Describe the Fault / Behavior</label>
+                        <textarea id="repair-desc" rows="3" placeholder="Explain what is not working..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="repair-name" placeholder="Your Name" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                        <input type="tel" id="repair-phone" placeholder="WhatsApp Number" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                    </div>
+
+                    <button type="submit" id="repair-submit-btn" class="btn-primary w-full py-4 rounded-xl font-bold uppercase text-sm tracking-widest text-white shadow-lg mt-2">
+                        Request Repair Service
+                    </button>
+                </form>
+
+                <div class="space-y-4">
+                    <div class="repair-step rounded-xl p-5 flex items-start gap-4">
+                        <div class="service-icon-wrap flex-shrink-0 mb-0"><i class="fas fa-search"></i></div>
+                        <div>
+                            <h4 class="font-bold mb-1">Tell us the issue</h4>
+                            <p class="text-sm text-gray-600">Share what's not working and upload an image of your physical circuit setup.</p>
+                        </div>
+                    </div>
+                    <div class="repair-step rounded-xl p-5 flex items-start gap-4">
+                        <div class="service-icon-wrap flex-shrink-0 mb-0"><i class="fas fa-microscope"></i></div>
+                        <div>
+                            <h4 class="font-bold mb-1">We diagnose & quote</h4>
+                            <p class="text-sm text-gray-600">Our team inspects the build, pinpoints faulty components or logic, and provides a estimate.</p>
+                        </div>
+                    </div>
+                    <div class="repair-step rounded-xl p-5 flex items-start gap-4">
+                        <div class="service-icon-wrap flex-shrink-0 mb-0"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <h4 class="font-bold mb-1">Fixed & delivered</h4>
+                            <p class="text-sm text-gray-600">Tested end-to-end and delivered 100% working, with post-repair viva guidance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section id="contact-section" class="py-24 bg-white border-t">
         <div class="container mx-auto px-6 max-w-2xl text-center">
@@ -258,7 +462,9 @@
                 <h4 class="font-bold text-lg mb-6 uppercase tracking-wider">Navigation</h4>
                 <div class="flex flex-col space-y-3 text-gray-700">
                     <a href="#about" class="hover:text-teal-600">Home</a>
+                    <a href="#services" class="hover:text-teal-600">Services</a>
                     <a href="#shop" class="hover:text-teal-600">Store</a>
+                    <a href="#repair-section" class="hover:text-teal-600">Repair</a>
                     <a href="#contact-section" class="hover:text-teal-600">Inquiry</a>
                 </div>
             </div>
@@ -272,6 +478,18 @@
         <button onclick="closeCartModal()" class="absolute top-4 right-4 text-3xl text-gray-300 hover:text-black">&times;</button>
         <h2 class="text-2xl font-bold mb-4 text-center">Cart Summary</h2>
         <div id="cart-items-list" class="max-h-60 overflow-y-auto mb-6 space-y-3"></div>
+
+        <div class="doc-toggle mb-6">
+            <div>
+                <p class="font-bold text-sm">Add Documentation & Report</p>
+                <p class="text-xs text-gray-500">Full report + viva prep support — ₹499</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="docAddonCheckbox" onchange="toggleDocAddon()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
         <div class="border-t pt-4 mb-6 flex justify-between font-bold text-xl">
             <span>Total:</span><span id="cart-total-display" class="text-teal-600">₹0</span>
         </div>
@@ -280,7 +498,7 @@
 </div>
 
 <div id="confirm-modal">
-    <div class="bg-white rounded-3xl max-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
         <i class="fas fa-check-circle text-6xl text-teal-500 mb-4"></i>
         <h2 class="text-2xl font-bold mb-2 text-indigo-600">Thank You!</h2>
         <p class="text-gray-600 mb-6">Details received. We'll be in touch.</p>
@@ -288,8 +506,18 @@
     </div>
 </div>
 
+<div id="repair-popup-modal">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-8 mx-4 text-center border-2 border-teal-500 shadow-2xl">
+        <div class="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-clock text-3xl text-teal-600"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2 text-indigo-600">Repair Request Received</h2>
+        <p class="text-gray-600 mb-6 font-medium text-sm">Your message will be replied within 24 hours.</p>
+        <button onclick="closeRepairPopup()" class="btn-primary w-full py-3 rounded-xl font-bold text-white uppercase tracking-wider text-xs">Got it</button>
+    </div>
+</div>
+
 <script>
-    // --- DATA ---
     const roboticsProjects = [
         { name: "Advanced ESP32 Surveillance Rover (Live Streaming + Control)", price: 8500, image: "https://mbatechmeds.com/wp-content/uploads/2021/08/Cam_robot.png", desc: "Uses ESP32-CAM to stream real-time video over WiFi while being controlled via a mobile app." },
         { name: "Human Following Robot", price: 5500, image: "https://shop.techatronic.com/wp-content/uploads/2025/01/Untitled-design-10.png", desc: "Utilizes ultrasonic or IR sensors to detect human movement and maintain a specific distance automatically." },
@@ -410,11 +638,12 @@
         { name: "Relay Module", price: 50, image: "https://rukminim2.flixcart.com/image/480/480/klfhk7k0/electronic-hobby-kit/3/p/d/5v-single-channel-relay-module-for-arduino-and-raspberry-low-original-imagyjsfgr6zy6wx.jpeg?q=90", desc: "Controls high voltage loads." }
     ];
 
-    // --- LOGIC ---
     let cart = [];
     let currentItem = {};
     let minBudget = 0;
     let maxBudget = 1000000;
+    let docAddonSelected = false;
+    const DOC_ADDON_PRICE = 499;
 
     function createCards(list, containerId, iconClass) {
         const container = document.getElementById(containerId);
@@ -423,8 +652,8 @@
             div.className = "card store-card p-5 rounded-2xl cursor-pointer project-item";
             div.setAttribute('data-price', p.price);
             div.onclick = () => openProduct(p, iconClass);
-            
-            const media = (p.image && p.image !== "") 
+
+            const media = (p.image && p.image !== "")
                 ? `<img src="${p.image}" class="w-full h-32 object-contain rounded-xl mb-3">`
                 : `<div class="w-full h-32 bg-gray-100 rounded-xl mb-3 flex items-center justify-center text-gray-300">
                     <i class="fas ${iconClass} fa-2x"></i>
@@ -444,11 +673,11 @@
         currentItem = p;
         const modal = document.getElementById('product-modal');
         const header = document.getElementById('modal-image-header');
-        
+
         document.getElementById('modal-title').innerText = p.name;
         document.getElementById('modal-price').innerText = "₹" + p.price;
         document.getElementById('modal-desc').innerText = p.desc;
-        
+
         header.innerHTML = (p.image && p.image !== "")
             ? `<img src="${p.image}" class="w-full h-full object-contain">`
             : `<i class="fas ${iconClass} text-6xl text-gray-200"></i>`;
@@ -482,7 +711,7 @@
         const query = document.getElementById('projectSearch').value.toLowerCase().trim();
         const clearBtn = document.getElementById('clearSearch');
         const noResultsMsg = document.getElementById('noResultsMsg');
-        
+
         clearBtn.classList.toggle('hidden', query === "");
         let globalMatchFound = false;
 
@@ -493,7 +722,7 @@
             items.forEach(item => {
                 const name = item.querySelector('h4').innerText.toLowerCase();
                 const price = parseInt(item.getAttribute('data-price'));
-                
+
                 const searchMatch = name.includes(query);
                 const budgetMatch = price >= minBudget && price <= maxBudget;
 
@@ -516,22 +745,31 @@
     }
 
     function addToCart() { cart.push(currentItem); updateCartPill(); closeModal(); }
-    
+
     function updateCartPill() {
         const pill = document.getElementById('cart-pill');
         document.getElementById('cart-pill-count').innerText = `${cart.length} ITEMS`;
         pill.classList.toggle('visible', cart.length > 0);
     }
 
-    // --- REPLACED openCartModal SECTION ---
+    function cartSubtotal() {
+        return cart.reduce((sum, item) => sum + item.price, 0);
+    }
+
+    function cartTotal() {
+        return cartSubtotal() + (docAddonSelected ? DOC_ADDON_PRICE : 0);
+    }
+
+    function toggleDocAddon() {
+        docAddonSelected = document.getElementById('docAddonCheckbox').checked;
+        document.getElementById('cart-total-display').innerText = "₹" + cartTotal();
+    }
+
     function openCartModal() {
         const list = document.getElementById('cart-items-list');
-        let total = 0;
         list.innerHTML = "";
 
         cart.forEach((item, index) => {
-            total += item.price;
-
             list.innerHTML += `
                 <div class="flex justify-between items-center p-2 border-b">
                     <div>
@@ -545,62 +783,121 @@
                 </div>`;
         });
 
-        document.getElementById('cart-total-display').innerText = "₹" + total;
-        document.getElementById('cart-modal').style.display = 'flex';
+        document.getElementById('docAddonCheckbox').checked = docAddonSelected;
+        document.getElementById('cart-total-display').innerText = "₹" + cartTotal();
+        document.getElementById('cart-modal').classList.add('show');
     }
 
-    // --- ADDED removeFromCart FUNCTION ---
     function removeFromCart(index) {
         cart.splice(index, 1);
         updateCartPill();
-        openCartModal(); // Refresh modal view
+        openCartModal();
     }
 
-    function closeCartModal() { document.getElementById('cart-modal').style.display = 'none'; }
+    function closeCartModal() { document.getElementById('cart-modal').classList.remove('show'); }
 
-    // --- UPDATED CHECKOUT LOGIC ---
     function checkoutCart() {
         if (cart.length === 0) {
             alert("Your cart is empty!");
             return;
         }
 
-        let totalAmount = 0;
-        let itemStrings = cart.map(item => {
-            totalAmount += item.price;
-            return `• ${item.name} (₹${item.price})`;
-        });
+        let itemStrings = cart.map(item => `• ${item.name} (₹${item.price})`);
+
+        if (docAddonSelected) {
+            itemStrings.push(`• Documentation & Report Preparation (₹${DOC_ADDON_PRICE})`);
+        }
 
         const detailedMessage = `I am interested in ordering the following items:
 ----------------------------------
 ${itemStrings.join('\n')}
 ----------------------------------
-Sub-total: ₹${totalAmount}
+Total: ₹${cartTotal()}
 
 Please provide further details regarding the purchase.`;
 
         document.getElementById('message').value = detailedMessage;
-        closeCartModal(); 
+        closeCartModal();
         window.location.hash = "contact-section";
-        
-        // Focus the name field for a better user experience
+
         setTimeout(() => document.getElementById('name').focus(), 500);
     }
 
-    function orderNow() { 
-        // Logic for "Buy Now" - clears previous cart and adds just this item
-        cart = [currentItem]; 
+    function orderNow() {
+        cart = [currentItem];
         updateCartPill();
-        checkoutCart(); 
-        closeModal(); 
+        checkoutCart();
+        closeModal();
     }
 
-    function discussIdea(type) { 
-        window.location.hash = "contact-section"; 
-        document.getElementById('message').value = `Hi, I have a custom ${type} idea I'd like to discuss: \n`; 
+    function discussIdea(type) {
+        window.location.hash = "contact-section";
+        document.getElementById('message').value = `Hi, I have a custom ${type} idea I'd like to discuss: \n`;
+        setTimeout(() => document.getElementById('name').focus(), 500);
     }
 
-    function closeConfirm() { document.getElementById('confirm-modal').style.display = 'none'; }
+    function requestService(serviceName, prefillMessage) {
+        window.location.hash = "contact-section";
+        document.getElementById('message').value = `${prefillMessage}\n`;
+        setTimeout(() => document.getElementById('name').focus(), 500);
+    }
+
+    function scrollToRepair() {
+        window.location.hash = "repair-section";
+    }
+
+    function closeConfirm() { document.getElementById('confirm-modal').classList.remove('show'); }
+
+    function previewRepairImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('repair-image-preview').src = e.target.result;
+                document.getElementById('upload-placeholder').classList.add('hidden');
+                document.getElementById('repair-image-preview-wrap').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function submitRepairRequest(e) {
+        e.preventDefault();
+        const desc = document.getElementById('repair-desc').value;
+        const name = document.getElementById('repair-name').value;
+        const phone = document.getElementById('repair-phone').value;
+        const hasImage = !document.getElementById('repair-image-preview-wrap').classList.contains('hidden');
+
+        const repairMessage = `[PROJECT REPAIR REQUEST]
+----------------------------------
+Customer Name: ${name}
+WhatsApp Number: ${phone}
+Image Attached: ${hasImage ? "Yes" : "No"}
+
+Issue Description:
+${desc}`;
+
+        emailjs.send("service_cs9akh6", "template_es7nsoo", {
+            name: name,
+            message: repairMessage
+        }).then(() => {
+            showRepairPopup();
+            document.getElementById('repair-form').reset();
+            document.getElementById('upload-placeholder').classList.remove('hidden');
+            document.getElementById('repair-image-preview-wrap').classList.add('hidden');
+        }).catch((err) => {
+            console.error("EmailJS error:", err);
+            showRepairPopup();
+        });
+    }
+
+    function showRepairPopup() {
+        document.getElementById('repair-popup-modal').classList.add('show');
+    }
+
+    function closeRepairPopup() {
+        document.getElementById('repair-popup-modal').classList.remove('show');
+    }
 
     function setupInteractiveScroll(container) {
         let isPaused = false;
@@ -626,9 +923,9 @@ Please provide further details regarding the purchase.`;
         emailjs.send("service_cs9akh6", "template_es7nsoo", {
             name: document.getElementById("name").value,
             message: document.getElementById("message").value
-        }).then(() => { 
-            document.getElementById('confirm-modal').style.display = 'flex'; 
-            this.reset(); cart = []; updateCartPill();
+        }).then(() => {
+            document.getElementById('confirm-modal').classList.add('show');
+            this.reset(); cart = []; docAddonSelected = false; updateCartPill();
         });
     });
 
