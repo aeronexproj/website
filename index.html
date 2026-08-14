@@ -362,7 +362,7 @@
                     <div>
                         <label class="block text-sm font-bold mb-2 text-gray-700">Upload Project Photo / Issue Image</label>
                         <div class="border-2 border-dashed border-gray-300 hover:border-teal-500 rounded-xl p-4 text-center cursor-pointer transition-colors relative bg-gray-50" onclick="document.getElementById('repair-image-input').click()">
-                            <input type="file" id="repair-image-input" accept="image/*" class="hidden" onchange="previewRepairImage(event)">
+                            <input type="file" id="repair-image-input" name="attachment" accept="image/*" class="hidden" onchange="previewRepairImage(event)">
                             <div id="upload-placeholder">
                                 <i class="fas fa-camera text-3xl text-teal-600 mb-2"></i>
                                 <p class="text-sm font-medium text-gray-700">Click to upload photo or capture from camera</p>
@@ -377,13 +377,15 @@
 
                     <div>
                         <label for="repair-desc" class="block text-sm font-bold mb-1 text-gray-700">Describe the Fault / Behavior</label>
-                        <textarea id="repair-desc" rows="3" placeholder="Explain what is not working..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm"></textarea>
+                        <textarea id="repair-desc" name="issue_desc" rows="3" placeholder="Explain what is not working..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm"></textarea>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input type="text" id="repair-name" placeholder="Your Name" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
-                        <input type="tel" id="repair-phone" placeholder="WhatsApp Number" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                        <input type="text" id="repair-name" name="name" placeholder="Your Name" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                        <input type="tel" id="repair-phone" name="phone" placeholder="WhatsApp Number" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
                     </div>
+
+                    <input type="hidden" id="repair-message-hidden" name="message">
 
                     <button type="submit" id="repair-submit-btn" class="btn-primary w-full py-4 rounded-xl font-bold uppercase text-sm tracking-widest text-white shadow-lg mt-2">
                         Request Repair Service
@@ -640,7 +642,7 @@
     let docAddonSelected = false;
     const DOC_ADDON_PRICE = 499;
 
-    // Base64 storage variable for the uploaded repair image
+    // Base64 storage variable used only for the on-page preview thumbnail
     let repairImageBase64 = "";
 
     function createCards(list, containerId, iconClass) {
@@ -846,7 +848,8 @@ Please provide further details regarding the purchase.`;
 
     function closeConfirm() { document.getElementById('confirm-modal').classList.remove('show'); }
 
-    // Convert repair image file to Base64 String
+    // Handles ONLY the on-page thumbnail preview. The actual file that gets
+    // emailed is read directly from the <input name="attachment"> by emailjs.sendForm().
     function previewRepairImage(event) {
         const file = event.target.files[0];
         if (file) {
@@ -855,8 +858,6 @@ Please provide further details regarding the purchase.`;
                 document.getElementById('repair-image-preview').src = e.target.result;
                 document.getElementById('upload-placeholder').classList.add('hidden');
                 document.getElementById('repair-image-preview-wrap').classList.remove('hidden');
-                
-                // Store Base64 string for EmailJS payload
                 repairImageBase64 = e.target.result;
             };
             reader.readAsDataURL(file);
@@ -879,29 +880,32 @@ Image Attached: ${hasImage ? "Yes" : "No"}
 Issue Description:
 ${desc}`;
 
+        // Populate the hidden field so sendForm carries the composed message too
+        document.getElementById('repair-message-hidden').value = repairMessage;
+
         const submitBtn = document.getElementById('repair-submit-btn');
         const originalText = submitBtn.innerText;
         submitBtn.innerText = "SENDING...";
         submitBtn.disabled = true;
 
-        emailjs.send("service_cs9akh6", "template_es7nsoo", {
-            name: name,
-            phone: phone,
-            message: repairMessage,
-            image_data: repairImageBase64 // Sends base64 image data to EmailJS
-        }).then(() => {
-            showRepairPopup();
-            document.getElementById('repair-form').reset();
-            document.getElementById('upload-placeholder').classList.remove('hidden');
-            document.getElementById('repair-image-preview-wrap').classList.add('hidden');
-            repairImageBase64 = "";
-        }).catch((err) => {
-            console.error("EmailJS error:", err);
-            showRepairPopup();
-        }).finally(() => {
-            submitBtn.innerText = originalText;
-            submitBtn.disabled = false;
-        });
+        // sendForm submits the real <form>, including the file input, so the
+        // actual photo travels as a genuine email attachment (not base64 text).
+        emailjs.sendForm("service_cs9akh6", "template_es7nsoo", document.getElementById('repair-form'))
+            .then(() => {
+                showRepairPopup();
+                document.getElementById('repair-form').reset();
+                document.getElementById('upload-placeholder').classList.remove('hidden');
+                document.getElementById('repair-image-preview-wrap').classList.add('hidden');
+                repairImageBase64 = "";
+            })
+            .catch((err) => {
+                console.error("EmailJS error:", err);
+                alert("Something went wrong sending your repair request. Please try again.");
+            })
+            .finally(() => {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            });
     }
 
     function showRepairPopup() {
