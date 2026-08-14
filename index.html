@@ -360,32 +360,37 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                 <form id="repair-form" onsubmit="submitRepairRequest(event)" class="bg-white p-6 rounded-2xl border border-[#E6DED3] shadow-sm space-y-4">
                     <div>
-                        <label class="block text-sm font-bold mb-2 text-gray-700">Upload Project Photo / Issue Image</label>
-                        <div class="border-2 border-dashed border-gray-300 hover:border-teal-500 rounded-xl p-4 text-center cursor-pointer transition-colors relative bg-gray-50" onclick="document.getElementById('repair-image-input').click()">
-                            <input type="file" id="repair-image-input" name="attachment" accept="image/*" class="hidden" onchange="previewRepairImage(event)">
-                            <div id="upload-placeholder">
-                                <i class="fas fa-camera text-3xl text-teal-600 mb-2"></i>
-                                <p class="text-sm font-medium text-gray-700">Click to upload photo or capture from camera</p>
-                                <p class="text-xs text-gray-400 mt-1">PNG, JPG, or WEBP formats supported</p>
-                            </div>
-                            <div id="repair-image-preview-wrap" class="hidden flex flex-col items-center">
-                                <img id="repair-image-preview" src="" alt="Project Issue Preview" class="max-h-40 rounded-lg object-contain shadow-sm mb-2">
-                                <span class="text-xs text-teal-600 font-bold uppercase tracking-wider"><i class="fas fa-check-circle mr-1"></i> Image Attached (Click to change)</span>
-                            </div>
-                        </div>
+                        <label for="repair-project-name" class="block text-sm font-bold mb-1 text-gray-700">Project Name</label>
+                        <input type="text" id="repair-project-name" placeholder="e.g. Line Following Robot, ESP32 Rover..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label for="repair-components" class="block text-sm font-bold mb-1 text-gray-700">Components / Modules Used</label>
+                        <textarea id="repair-components" rows="2" placeholder="List the main components attached, e.g. Arduino Uno, L298N Motor Driver, Ultrasonic Sensor, 2x DC Motors..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="repair-condition" class="block text-sm font-bold mb-1 text-gray-700">Current Condition</label>
+                        <select id="repair-condition" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                            <option value="">Select condition...</option>
+                            <option value="Not working at all">Not working at all</option>
+                            <option value="Partially working">Partially working</option>
+                            <option value="Physically damaged">Physically damaged</option>
+                            <option value="Works but unreliable/inconsistent">Works but unreliable / inconsistent</option>
+                            <option value="Never tested / assembled but not powered on">Never tested / assembled but not powered on</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
 
                     <div>
                         <label for="repair-desc" class="block text-sm font-bold mb-1 text-gray-700">Describe the Fault / Behavior</label>
-                        <textarea id="repair-desc" name="issue_desc" rows="3" placeholder="Explain what is not working..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm"></textarea>
+                        <textarea id="repair-desc" rows="3" placeholder="Explain what is not working..." required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm"></textarea>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input type="text" id="repair-name" name="name" placeholder="Your Name" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
-                        <input type="tel" id="repair-phone" name="phone" placeholder="WhatsApp Number" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                        <input type="text" id="repair-name" placeholder="Your Name" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
+                        <input type="tel" id="repair-phone" placeholder="WhatsApp Number" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-teal-500 text-sm">
                     </div>
-
-                    <input type="hidden" id="repair-message-hidden" name="message">
 
                     <button type="submit" id="repair-submit-btn" class="btn-primary w-full py-4 rounded-xl font-bold uppercase text-sm tracking-widest text-white shadow-lg mt-2">
                         Request Repair Service
@@ -397,7 +402,7 @@
                         <div class="service-icon-wrap flex-shrink-0 mb-0"><i class="fas fa-search"></i></div>
                         <div>
                             <h4 class="font-bold mb-1">Tell us the issue</h4>
-                            <p class="text-sm text-gray-600">Share what's not working and upload an image of your physical circuit setup.</p>
+                            <p class="text-sm text-gray-600">Share your project name, the components used, and what's not working.</p>
                         </div>
                     </div>
                     <div class="repair-step rounded-xl p-5 flex items-start gap-4">
@@ -642,9 +647,6 @@
     let docAddonSelected = false;
     const DOC_ADDON_PRICE = 499;
 
-    // Base64 storage variable used only for the on-page preview thumbnail
-    let repairImageBase64 = "";
-
     function createCards(list, containerId, iconClass) {
         const container = document.getElementById(containerId);
         list.forEach(p => {
@@ -848,64 +850,47 @@ Please provide further details regarding the purchase.`;
 
     function closeConfirm() { document.getElementById('confirm-modal').classList.remove('show'); }
 
-    // Handles ONLY the on-page thumbnail preview. The actual file that gets
-    // emailed is read directly from the <input name="attachment"> by emailjs.sendForm().
-    function previewRepairImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('repair-image-preview').src = e.target.result;
-                document.getElementById('upload-placeholder').classList.add('hidden');
-                document.getElementById('repair-image-preview-wrap').classList.remove('hidden');
-                repairImageBase64 = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
     function submitRepairRequest(e) {
         e.preventDefault();
+        const projectName = document.getElementById('repair-project-name').value;
+        const components = document.getElementById('repair-components').value;
+        const condition = document.getElementById('repair-condition').value;
         const desc = document.getElementById('repair-desc').value;
         const name = document.getElementById('repair-name').value;
         const phone = document.getElementById('repair-phone').value;
-        const hasImage = repairImageBase64 !== "";
 
         const repairMessage = `[PROJECT REPAIR REQUEST]
 ----------------------------------
 Customer Name: ${name}
 WhatsApp Number: ${phone}
-Image Attached: ${hasImage ? "Yes" : "No"}
+
+Project Name: ${projectName}
+Current Condition: ${condition}
+
+Components / Modules Used:
+${components}
 
 Issue Description:
 ${desc}`;
-
-        // Populate the hidden field so sendForm carries the composed message too
-        document.getElementById('repair-message-hidden').value = repairMessage;
 
         const submitBtn = document.getElementById('repair-submit-btn');
         const originalText = submitBtn.innerText;
         submitBtn.innerText = "SENDING...";
         submitBtn.disabled = true;
 
-        // sendForm submits the real <form>, including the file input, so the
-        // actual photo travels as a genuine email attachment (not base64 text).
-        emailjs.sendForm("service_cs9akh6", "template_es7nsoo", document.getElementById('repair-form'))
-            .then(() => {
-                showRepairPopup();
-                document.getElementById('repair-form').reset();
-                document.getElementById('upload-placeholder').classList.remove('hidden');
-                document.getElementById('repair-image-preview-wrap').classList.add('hidden');
-                repairImageBase64 = "";
-            })
-            .catch((err) => {
-                console.error("EmailJS error:", err);
-                alert("Something went wrong sending your repair request. Please try again.");
-            })
-            .finally(() => {
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-            });
+        emailjs.send("service_cs9akh6", "template_es7nsoo", {
+            name: name,
+            message: repairMessage
+        }).then(() => {
+            showRepairPopup();
+            document.getElementById('repair-form').reset();
+        }).catch((err) => {
+            console.error("EmailJS error:", err);
+            alert("Something went wrong sending your repair request. Please try again.");
+        }).finally(() => {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        });
     }
 
     function showRepairPopup() {
